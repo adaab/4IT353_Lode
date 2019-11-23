@@ -9,4 +9,6 @@ public class ClientDto {
     public String password;
     public Boolean playerReadyToPlay;
     public List<Ship> playerShips;
+    public Integer shotX;
+    public Integer shotY;
 }

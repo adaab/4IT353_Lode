@@ -1,17 +1,23 @@
 package comm;
 
+import logic.Game;
 import logic.Player;
 
 import javax.xml.transform.stream.StreamSource;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
 
 public class TCPServer implements ServerListener{
     private int port;
     private boolean open = true;
     private ServerSocket ss;
     private ArrayList<Socket> clients = new ArrayList<>();
+    private HashMap<Integer, Game> games = new HashMap<>();
+    private Integer lastInitiatedGameId;
+    private Random rnd = new Random();
     public TCPServer(int port){
         try{
             ss=new ServerSocket(port);
@@ -30,7 +36,7 @@ public class TCPServer implements ServerListener{
                                         BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
                                         PrintWriter out = new PrintWriter(s.getOutputStream(), true);
                                         Player client = new Player(s.getInetAddress(), s.getPort());
-                                        clientConncted(client, out);
+                                        clientConnected(client, out);
                                         while(open){
                                             try{ recivedInput(client, in.readLine());
                                             }catch(IOException e){
@@ -100,8 +106,21 @@ public class TCPServer implements ServerListener{
     }
 
     @Override
-    public void clientConncted(Player client, PrintWriter out) {
+    public void clientConnected(Player client, PrintWriter out) {
         System.out.println("CLIENT " + client + " connected");
+        if (games.get(lastInitiatedGameId) == null || games.get(lastInitiatedGameId).getPlayerB() != null) {
+            Integer nextGameId = generateNextGameId();
+            games.put(nextGameId, new Game(nextGameId));
+            lastInitiatedGameId = nextGameId;
+            System.out.println("started new game " + lastInitiatedGameId);
+            games.get(lastInitiatedGameId).setPlayerA(client);
+
+        } else {
+            games.get(lastInitiatedGameId).setPlayerB(client);
+            System.out.println("player b assigned to a game: " + lastInitiatedGameId);
+            //TODO maybe start game
+        }
+
     }
 
     @Override
@@ -117,5 +136,15 @@ public class TCPServer implements ServerListener{
     @Override
     public void serverClosed() {
         System.out.println("SERVER CLOSED");
+    }
+
+    private Integer generateNextGameId() {
+        //TODO HANDLE MAX GAMES
+        Integer gameId = rnd.nextInt(100);
+        if (games.containsKey(gameId)) {
+            return generateNextGameId();
+        } else {
+            return gameId;
+        }
     }
 }

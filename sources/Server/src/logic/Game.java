@@ -3,11 +3,40 @@ package logic;
 import java.util.ArrayList;
 
 public class Game {
+    private Integer gameId;
     private ArrayList<GameField> fields;
     private Player playerA;
     private Player playerB;
+    private Boolean isGameRunning;
 
-    public Game() {
+    public Integer getGameId() {
+        return gameId;
+    }
+
+    public void setGameId(Integer gameId) {
+        this.gameId = gameId;
+    }
+
+    public Player getPlayerA() {
+        return playerA;
+    }
+
+    public void setPlayerA(Player playerA) {
+        this.playerA = playerA;
+        this.playerA.setGameId(this.gameId);
+    }
+
+    public Player getPlayerB() {
+        return playerB;
+    }
+
+    public void setPlayerB(Player playerB) {
+        this.playerB = playerB;
+        this.playerB.setGameId(this.gameId);
+    }
+
+    public Game(Integer gameId) {
+        this.gameId = gameId;
         initGameBoard();
     }
 
