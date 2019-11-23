@@ -1,22 +1,28 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import comm.ClientDto;
+
+import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class Client implements ClientListener{
     private Socket socket;
     private BufferedReader in;
-    private PrintWriter out;
+    private ObjectOutputStream out;
     private boolean open = true;
     public Client(String ip, int port){
         try{
             socket=new Socket(ip, port);
             in=new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            out=new PrintWriter(socket.getOutputStream(), true);
+            out= new ObjectOutputStream(socket.getOutputStream());
             Thread clientThread = new Thread(new Runnable(){
                 public void run(){
+                    ClientDto dto = new ClientDto();
+                    dto.id = "MOJE Jméno";
+                    try {
+                        send(dto);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     while(open){
                         try{
                             String s = in.readLine();
@@ -47,7 +53,7 @@ public class Client implements ClientListener{
                 }
             });
             clientThread.setName("Client Connection");
-            clientThread.setDaemon(true);
+            clientThread.setDaemon(false);
             clientThread.start();
             connectedToServer();
         }catch(UnknownHostException exception){
@@ -75,7 +81,7 @@ public class Client implements ClientListener{
             out=null;
         }catch(Exception exception){ exception.printStackTrace();}
     }
-    public void send(String msg){ if(open)out.println(msg); }
+    public void send(ClientDto msg) throws IOException { if(open)out.writeObject(msg); }
     public boolean isConnected(){ return open; }
 
     @Override
@@ -90,7 +96,7 @@ public class Client implements ClientListener{
 
     @Override
     public void recivedInput(String msg) {
-
+        System.out.println("RECIEVED INPUT: " + msg);
     }
 
     @Override

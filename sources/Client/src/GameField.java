@@ -1,5 +1,3 @@
-package logic;
-
 import java.io.Serializable;
 
 public class GameField implements Serializable {

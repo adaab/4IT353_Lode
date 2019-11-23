@@ -1,5 +1,3 @@
-package comm;
-
 import java.io.Serializable;
 
 public class ServerDto implements Serializable {
