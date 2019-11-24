@@ -1,21 +1,24 @@
 import comm.ClientDto;
+import comm.ServerDto;
 
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+
 public class Client implements ClientListener{
     private Socket socket;
-    private BufferedReader in;
+    private ObjectInputStream in;
     private ObjectOutputStream out;
     private boolean open = true;
     public Client(String ip, int port){
         try{
             socket=new Socket(ip, port);
-            in=new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            out= new ObjectOutputStream(socket.getOutputStream());
+            out = new ObjectOutputStream(socket.getOutputStream());
+            in =new ObjectInputStream(socket.getInputStream());
             Thread clientThread = new Thread(new Runnable(){
                 public void run(){
+                    //TODO SEND INIT, this is just for testing purposes
                     ClientDto dto = new ClientDto();
                     dto.id = "MOJE Jméno";
                     try {
@@ -25,7 +28,7 @@ public class Client implements ClientListener{
                     }
                     while(open){
                         try{
-                            String s = in.readLine();
+                            Object s = in.readObject();
                             if(s==null){
                                 open=false;
                                 disconnected();
@@ -67,7 +70,7 @@ public class Client implements ClientListener{
             exception.printStackTrace();
         }
     }
-    public void dispose(){
+    /*public void dispose(){
         try{
             if(open){
                 open=false;
@@ -80,8 +83,14 @@ public class Client implements ClientListener{
             in=null;
             out=null;
         }catch(Exception exception){ exception.printStackTrace();}
+    }*/
+    public void send(ClientDto msg) throws IOException {
+        if(open){
+            out.writeObject(msg);
+            out.flush();
+            System.out.println("FLUSHED");
+        }
     }
-    public void send(ClientDto msg) throws IOException { if(open)out.writeObject(msg); }
     public boolean isConnected(){ return open; }
 
     @Override
@@ -95,8 +104,9 @@ public class Client implements ClientListener{
     }
 
     @Override
-    public void recivedInput(String msg) {
-        System.out.println("RECIEVED INPUT: " + msg);
+    public void recivedInput(Object msg) {
+        ServerDto dto = (ServerDto) msg;
+        System.out.println("DTO " + dto + " msg: " + dto.playerPoints);
     }
 
     @Override

@@ -33,7 +33,7 @@ public class TCPServer implements ServerListener{
                                         clients.add(s);
                                         // get the input stream from the connected socket
                                         ObjectInputStream in = new ObjectInputStream(s.getInputStream());
-                                        PrintWriter out = new PrintWriter(s.getOutputStream(), true);
+                                        ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
                                         Player client = new Player(s.getInetAddress(), s.getPort(), out);
                                         clientConnected(client, out);
                                         while(open){
@@ -105,10 +105,16 @@ public class TCPServer implements ServerListener{
     }
 
     @Override
-    public void clientConnected(Player client, PrintWriter out) {
+    public void clientConnected(Player client, ObjectOutputStream out) {
         System.out.println("CLIENT " + client + " connected");
         handlePlayerSplitIntoGames(client);
-        client.printWriter.println("IDKAASFSAFSA");
+        ServerDto dto = new ServerDto();
+        dto.playerPoints = 10;
+        try {
+            client.out.writeObject(dto);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -118,8 +124,6 @@ public class TCPServer implements ServerListener{
 
     @Override
     public void recievedInput(Player client, Object msg) {
-        System.out.println("IDK IDK");
-        System.out.println("RECIEVED MSG FROM " + client + " msg: " + msg);
         ClientDto dto = (ClientDto) msg;
         System.out.println("DTO " + client + " msg: " + dto.id);
     }

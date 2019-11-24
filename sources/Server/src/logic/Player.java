@@ -1,5 +1,6 @@
 package logic;
 
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ public class Player {
     private String id;
     private Integer points;
     private List<Ship> ships;
-    public PrintWriter printWriter;
+    public ObjectOutputStream out;
 
     public Integer getGameId() {
         return gameId;
@@ -22,11 +23,11 @@ public class Player {
         this.gameId = gameId;
     }
 
-    public Player(InetAddress ip, Integer port, PrintWriter printWriter) {
+    public Player(InetAddress ip, Integer port, ObjectOutputStream out) {
         ships = new ArrayList<>();
         this.ip = ip;
         this.port = port;
-        this.printWriter = printWriter;
+        this.out = out;
     }
 
     public Boolean isAlive() {
