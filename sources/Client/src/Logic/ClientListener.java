@@ -1,3 +1,5 @@
+package Logic;
+
 public interface ClientListener{
     public void unknownHost();
     public void couldNotConnect();

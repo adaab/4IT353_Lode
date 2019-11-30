@@ -1,3 +1,6 @@
+package Logic;
+
+import Logic.ClientListener;
 import comm.ClientDto;
 import comm.ServerDto;
 
@@ -6,7 +9,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 
-public class Client implements ClientListener{
+public class Client implements ClientListener {
     private Socket socket;
     private ObjectInputStream in;
     private ObjectOutputStream out;
@@ -55,7 +58,7 @@ public class Client implements ClientListener{
                     }
                 }
             });
-            clientThread.setName("Client Connection");
+            clientThread.setName("Logic.Client Connection");
             clientThread.setDaemon(false);
             clientThread.start();
             connectedToServer();
