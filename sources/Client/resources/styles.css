@@ -60,3 +60,10 @@
 .gameField{
     -fx-background-color: white;
 }
+
+.fieldBox{
+    -fx-background-color: white;
+    -fx-pref-width: 25;
+    -fx-pref-height: 23;
+    -fx-alignment: center;
+}
