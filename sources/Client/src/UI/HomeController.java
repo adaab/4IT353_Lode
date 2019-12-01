@@ -7,7 +7,9 @@ import comm.ClientDto;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 
@@ -19,7 +21,9 @@ public Button vstoupit;
 @FXML
 public TextField name;
 @FXML
-public PasswordField password;
+public ProgressIndicator contentLoader;
+@FXML
+public Pane contentLoaderPane;
 
 
     private App app;
@@ -35,17 +39,17 @@ public PasswordField password;
     }
 
     public void logIn(){
+        vstoupit.disableProperty();
+        name.disableProperty();
+        contentLoaderPane.setVisible(true);
+        contentLoader.setVisible(true);
         String jmeno = name.getText();
-        String heslo = password.getText();
         ClientDto logIn = new ClientDto();
         logIn.id = jmeno;
-        logIn.password = heslo;
         try{
             app.getServer().send(logIn);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 }
