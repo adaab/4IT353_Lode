@@ -2,8 +2,15 @@ package Logic;
 
 import Logic.Observer;
 import Logic.Subject;
+import UI.HomeController;
 import comm.ServerDto;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -95,4 +102,8 @@ public class App implements Subject {
             }
         }
     }
+
+    public void getInfoScreen() {
+    }
+
 }
