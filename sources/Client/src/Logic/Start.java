@@ -1,10 +1,13 @@
 package Logic;
 
+import Logic.App;
 import UI.HomeController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class Start extends Application {
@@ -16,11 +19,11 @@ public class Start extends Application {
     public void start(Stage primaryStage) throws Exception{
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/home.fxml"));
-        GridPane root = loader.load();
+        VBox root = loader.load();
         HomeController controller = loader.getController();
 
         primaryStage.setTitle("Battleship");
-        Scene scene = new Scene(root, 800, 640);
+        Scene scene = new Scene(root, 1040, 800);
         primaryStage.setScene(scene);
         scene.getStylesheets().add("styles.css");
         primaryStage.show();

@@ -22,13 +22,14 @@ public class Client implements ClientListener {
             Thread clientThread = new Thread(new Runnable(){
                 public void run(){
                     //TODO SEND INIT, this is just for testing purposes
+                    /*
                     ClientDto dto = new ClientDto();
                     dto.id = "MOJE Jméno";
                     try {
                         send(dto);
                     } catch (IOException e) {
                         e.printStackTrace();
-                    }
+                    }*/
                     while(open){
                         try{
                             Object s = in.readObject();

@@ -3,13 +3,16 @@ package Logic;
 import Logic.Observer;
 import Logic.Subject;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class App implements Subject {
     private Set<Observer> Observers;
+    public Client server;
 
     public App(){
-        Client server = new Client("localhost", 8888);
+        Observers = new HashSet<>();
+        server = new Client("localhost", 8888);
     }
 
     @Override
@@ -40,5 +43,9 @@ public class App implements Subject {
         for (Observer pozorovatel : Observers) {
             pozorovatel.update();
         }
+    }
+
+    public Client getServer(){
+        return server;
     }
 }
