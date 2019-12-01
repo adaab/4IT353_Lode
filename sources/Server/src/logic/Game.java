@@ -42,10 +42,10 @@ public class Game {
 
     private void initGameBoard() {
         fields = new ArrayList<>();
-        String[] letters = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
-        for (int i = 0 ; i < 10 ; i++){
-            for (int j = 1 ; j <= 10 ; j++){
-                this.fields.add(new GameField(letters[i], String.valueOf(j)));
+        String[] letters = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"};
+        for (int i = 0 ; i < 16 ; i++){
+            for (int j = 1 ; j <= 12 ; j++){
+                this.fields.add(new GameField(letters[i], String.valueOf(j), "empty"));
             }
         }
     }

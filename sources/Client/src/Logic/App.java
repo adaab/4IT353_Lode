@@ -2,6 +2,7 @@ package Logic;
 
 import Logic.Observer;
 import Logic.Subject;
+import comm.ServerDto;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -9,10 +10,13 @@ import java.util.Set;
 public class App implements Subject {
     private Set<Observer> Observers;
     public Client server;
+    public String loggedUser;
+    public String gameState;
+    public Integer playerPoints;
 
     public App(){
         Observers = new HashSet<>();
-        server = new Client("localhost", 8888);
+        server = new Client("localhost", 8888, this);
     }
 
     @Override
@@ -48,4 +52,16 @@ public class App implements Subject {
     public Client getServer(){
         return server;
     }
+
+    public void processResponse(ServerDto dto){
+        if (dto.error != null) {
+
+        } else {
+            if(gameState.equals("NEW")){
+                //inicializuje novou hru - zadávání svých lodí
+            }
+
+        }
+    }
+
 }

@@ -14,7 +14,9 @@ public class Client implements ClientListener {
     private ObjectInputStream in;
     private ObjectOutputStream out;
     private boolean open = true;
-    public Client(String ip, int port){
+    private App app;
+    public Client(String ip, int port, App app){
+        this.app = app;
         try{
             socket=new Socket(ip, port);
             out = new ObjectOutputStream(socket.getOutputStream());
@@ -111,6 +113,7 @@ public class Client implements ClientListener {
     public void recivedInput(Object msg) {
         ServerDto dto = (ServerDto) msg;
         System.out.println("DTO " + dto + " msg: " + dto.playerPoints);
+        app.processResponse(dto);
     }
 
     @Override
