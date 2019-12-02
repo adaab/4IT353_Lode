@@ -8,7 +8,14 @@ public class Game {
     private Player playerA;
     private Player playerB;
     private Boolean isGameRunning;
-
+    public enum GameState {
+        WAITING_FOR_OTHER_PLAYER,
+        NEW, //uživatelé se přihlásili ok, může začít nová hra - zadání svých lodí apod.
+        PLAYING, //hra probíhá - dto jen pro aktualizaci polí po výstřelu
+        WIN,
+        LOSS
+    }
+    private GameState currentGameState;
     public Integer getGameId() {
         return gameId;
     }
@@ -35,9 +42,12 @@ public class Game {
         this.playerB.setGameId(this.gameId);
     }
 
-    public Game(Integer gameId) {
+    public Game(Integer gameId, Player playerA) {
         this.gameId = gameId;
         initGameBoard();
+        this.playerA = playerA;
+        this.currentGameState = GameState.WAITING_FOR_OTHER_PLAYER;
+
     }
 
     private void initGameBoard() {

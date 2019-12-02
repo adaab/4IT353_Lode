@@ -13,6 +13,7 @@ public class Player {
     private String id;
     private Integer points;
     private List<Ship> ships;
+    private List<GameField> foundOutOpponentFields;
     public ObjectOutputStream out;
 
     public Integer getGameId() {

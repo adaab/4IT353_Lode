@@ -136,9 +136,8 @@ public class TCPServer implements ServerListener{
     private void handlePlayerSplitIntoGames(Player client) {
         if (games.get(lastInitiatedGameId) == null || games.get(lastInitiatedGameId).getPlayerB() != null) {
             Integer nextGameId = generateNextGameId();
-            games.put(nextGameId, new Game(nextGameId));
+            games.put(nextGameId, new Game(nextGameId, client));
             lastInitiatedGameId = nextGameId;
-            client.setGameId(lastInitiatedGameId);
             System.out.println("started new game " + lastInitiatedGameId);
         } else {
             games.get(lastInitiatedGameId).setPlayerB(client);
