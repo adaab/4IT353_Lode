@@ -7,6 +7,7 @@ public class Game {
     private ArrayList<GameField> fields;
     private Player playerA;
     private Player playerB;
+    private Player currentlyPlaying;
     private Boolean isGameRunning;
     public enum GameState {
         WAITING_FOR_OTHER_PLAYER,
@@ -16,6 +17,7 @@ public class Game {
         LOSS
     }
     private GameState currentGameState;
+
     public Integer getGameId() {
         return gameId;
     }
@@ -42,12 +44,39 @@ public class Game {
         this.playerB.setGameId(this.gameId);
     }
 
+    public Player getCurrentlyPlaying() {
+        return currentlyPlaying;
+    }
+
+    public void setCurrentlyPlaying(Player currentlyPlaying) {
+        this.currentlyPlaying = currentlyPlaying;
+    }
+
+    public GameState getCurrentGameState() {
+        return currentGameState;
+    }
+
     public Game(Integer gameId, Player playerA) {
         this.gameId = gameId;
         initGameBoard();
         this.playerA = playerA;
         this.currentGameState = GameState.WAITING_FOR_OTHER_PLAYER;
+    }
 
+    public Player getCurrentlyNotPlayingPlayer() {
+        if (currentlyPlaying.getId().equals(playerA.getId())) {
+            return playerB;
+        } else {
+            return playerA;
+        }
+    }
+
+    public Player getOpponentForPlayer(Player p) {
+        if (p.getId().equals(playerA.getId())) {
+            return playerB;
+        } else {
+            return playerA;
+        }
     }
 
     private void initGameBoard() {

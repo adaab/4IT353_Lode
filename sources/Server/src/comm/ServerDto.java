@@ -12,11 +12,13 @@ public class ServerDto implements Serializable {
     public Boolean shotResult;
     public Integer playerPoints;
     public Game.GameState gameState;
-    public ArrayList playerField;
+    public ArrayList<GameField> playerFields;
+    public ArrayList<Ship> ships;
     public Exception e;
     public Error error;
     public String opponentId; //jméno soupeře
     public Integer opponentPoints; //body soupeře
+    public Boolean opponentShotResult; //did opponent hit?
     public ArrayList<GameField> opponentField; //pole soupeře pro aktualizaci klienta
     public ArrayList<Ship> destroyedOpponentsShips; //destroyed opponents ships - for client update
 }

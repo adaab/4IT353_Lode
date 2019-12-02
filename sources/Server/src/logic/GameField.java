@@ -6,10 +6,11 @@ public class GameField implements Serializable {
     private String x;
     private String y;
     private String fieldState;
-    public enum fieldState {
+    public enum FieldState {
         empty,
         ship,
-        shipHit;
+        shipHit,
+        missed
     }
 
     public GameField(String x, String y, String fieldState){
