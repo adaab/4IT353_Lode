@@ -4,14 +4,12 @@ import Logic.App;
 import Logic.Client;
 import Logic.Observer;
 import comm.ClientDto;
+import comm.ServerDto;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
-
 import java.io.IOException;
+import static logic.Game.GameState.WAITING_FOR_OTHER_PLAYER;
 
 
 public class HomeController implements Observer {
@@ -25,7 +23,6 @@ public ProgressIndicator contentLoader;
 @FXML
 public Pane contentLoaderPane;
 
-
     private App app;
 
     @Override
@@ -38,7 +35,7 @@ public Pane contentLoaderPane;
         update();
     }
 
-    public void logIn(){
+    public void logIn() throws IOException {
         vstoupit.disableProperty();
         name.disableProperty();
         contentLoaderPane.setVisible(true);
@@ -46,10 +43,17 @@ public Pane contentLoaderPane;
         String jmeno = name.getText();
         ClientDto logIn = new ClientDto();
         logIn.id = jmeno;
+
+        /* TODO AFTER SERVER CAN RESPOND
         try{
             app.getServer().send(logIn);
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
+
+        ServerDto dto = new ServerDto();
+        dto.id = "Pepa";
+        dto.gameState = WAITING_FOR_OTHER_PLAYER;
+        app.processResponse(dto);
     }
 }

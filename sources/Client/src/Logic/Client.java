@@ -110,7 +110,7 @@ public class Client implements ClientListener {
     }
 
     @Override
-    public void recivedInput(Object msg) {
+    public void recivedInput(Object msg) throws IOException {
         ServerDto dto = (ServerDto) msg;
         System.out.println("DTO " + dto + " msg: " + dto.playerPoints);
         app.processResponse(dto);
