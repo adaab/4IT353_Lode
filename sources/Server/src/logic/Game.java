@@ -84,7 +84,7 @@ public class Game {
         String[] letters = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"};
         for (int i = 0 ; i < 16 ; i++){
             for (int j = 1 ; j <= 12 ; j++){
-                this.fields.add(new GameField(letters[i], String.valueOf(j), "empty"));
+                this.fields.add(new GameField(letters[i], String.valueOf(j), GameField.FieldState.empty));
             }
         }
     }

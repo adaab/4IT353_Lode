@@ -9,6 +9,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import java.io.IOException;
+
+import static logic.Game.GameState.NEW;
 import static logic.Game.GameState.WAITING_FOR_OTHER_PLAYER;
 
 
@@ -53,7 +55,7 @@ public Pane contentLoaderPane;
 
         ServerDto dto = new ServerDto();
         dto.id = "Pepa";
-        dto.gameState = WAITING_FOR_OTHER_PLAYER;
+        dto.gameState = NEW;
         app.processResponse(dto);
     }
 }

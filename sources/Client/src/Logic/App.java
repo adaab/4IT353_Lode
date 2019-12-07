@@ -2,6 +2,7 @@ package Logic;
 
 import Logic.Observer;
 import Logic.Subject;
+import UI.GameController;
 import UI.HomeController;
 import UI.InfoController;
 import comm.ServerDto;
@@ -30,6 +31,7 @@ public class App implements Subject {
     public ArrayList opponentField;
     public Stage stage;
     public HomeController controller;
+    public GameController gameController;
 
 
     public App(Stage stage, HomeController controller) {
@@ -82,14 +84,15 @@ public class App implements Subject {
                 getInfoScreen();
                 //TODO inicializace obrazovky "čekám"
             } else {
-                if (dto.gameState.equals("NEW")) {
+                if (dto.gameState.equals(Game.GameState.NEW)) {
                     this.gameState = dto.gameState;
                     this.player = dto.id;
                     this.playerPoints = dto.playerPoints;
                     this.playerField = dto.playerFields;
                     this.opponentId = dto.opponentId;
-                    this.opponentPoints = dto.opponentPoints;
-                    this.opponentField = dto.opponentField;
+                    //this.opponentPoints = dto.opponentPoints;
+                    //this.opponentField = dto.opponentField;
+                    getGameScreen();
                     //TODO inicializuje novou hru - zadávání svých lodí
                 } else {
                     if (dto.gameState.equals("PLAYING")) {
@@ -126,7 +129,22 @@ public class App implements Subject {
         }
 
         public void getGameScreen() throws IOException{
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/game.fxml"));
+            VBox root = loader.load();
+            GameController gameController = loader.getController();
 
+            Scene scene = new Scene(root, 1040, 800);
+            stage.setScene(scene);
+            stage.setTitle("Battleship");
+            scene.getStylesheets().add("styles.css");
+            gameController.inicializuj(this);
+            gameController.prepareNewGame();
+            this.gameController = gameController;
         }
+
+    public ArrayList getPlayerField() {
+        return playerField;
+    }
 }
 
