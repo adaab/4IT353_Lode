@@ -124,5 +124,9 @@ public class App implements Subject {
         controller.inicializuj(this);
         controller.waitForOtherPlayer();
         }
+
+        public void getGameScreen() throws IOException{
+
+        }
 }
 
