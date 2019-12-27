@@ -78,7 +78,7 @@ public class App implements Subject {
                 this.gameId = dto.gameId;
                 //TODO inicializace obrazovky "čekám"
             } else {
-                if (dto.gameState.equals("NEW")) {
+                if (dto.gameState.equals(Game.GameState.NEW)) {
                     this.gameState = dto.gameState;
                     this.player = dto.id;
                     this.playerPoints = dto.playerPoints;
@@ -88,16 +88,16 @@ public class App implements Subject {
                     this.opponentField = dto.opponentField;
                     //TODO inicializuje novou hru - zadávání svých lodí
                 } else {
-                    if (dto.gameState.equals("PLAYING")) {
+                    if (dto.gameState.equals(Game.GameState.PLAYING)) {
                         this.playerPoints = dto.playerPoints;
                         this.playerField = dto.playerFields;
                         this.opponentPoints = dto.opponentPoints;
                         this.opponentField = dto.opponentField;
                     } else {
-                        if (dto.gameState.equals("WIN")) {
+                        if (dto.gameState.equals(Game.GameState.WIN)) {
                             //TODO inicializuje obrazovku konec a zobrazí výhru
                         } else {
-                            if (dto.gameState.equals("LOSS")) {
+                            if (dto.gameState.equals(Game.GameState.LOSS)) {
                                 //TODO inicializuje obrazovku konec a zobrazí prohru
                             }
                         }
