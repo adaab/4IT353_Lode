@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import logic.Game;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class App implements Subject {
     private Set<Observer> Observers;
     public Client server;
     public String player;
-    public String gameState;
+    public Game.GameState gameState;
     public Integer playerPoints;
     public ArrayList playerField;
     public String opponentId;
@@ -70,7 +71,8 @@ public class App implements Subject {
         if (dto.error != null) {
             //TODO somehow handle the error
         } else {
-            if (dto.gameState.equals("WAITING_FOR_OTHER_PLAYER")) {
+            if (dto.gameState.equals(Game.GameState.WAITING_FOR_OTHER_PLAYER)) {
+                System.out.println("WAITING FOR OTHER PLAYER");
                 this.player = dto.id;
                 //TODO inicializace obrazovky "čekám"
             } else {
@@ -78,7 +80,7 @@ public class App implements Subject {
                     this.gameState = dto.gameState;
                     this.player = dto.id;
                     this.playerPoints = dto.playerPoints;
-                    this.playerField = dto.playerField;
+                    this.playerField = dto.playerFields;
                     this.opponentId = dto.opponentId;
                     this.opponentPoints = dto.opponentPoints;
                     this.opponentField = dto.opponentField;
@@ -86,7 +88,7 @@ public class App implements Subject {
                 } else {
                     if (dto.gameState.equals("PLAYING")) {
                         this.playerPoints = dto.playerPoints;
-                        this.playerField = dto.playerField;
+                        this.playerField = dto.playerFields;
                         this.opponentPoints = dto.opponentPoints;
                         this.opponentField = dto.opponentField;
                     } else {

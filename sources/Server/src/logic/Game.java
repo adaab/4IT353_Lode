@@ -1,5 +1,7 @@
 package logic;
 
+import comm.CommunicationDtosService;
+
 import java.util.ArrayList;
 
 public class Game {
@@ -9,6 +11,8 @@ public class Game {
     private Player playerB;
     private Player currentlyPlaying;
     private Boolean isGameRunning;
+
+    private Boolean lastShotResult;
     public enum GameState {
         WAITING_FOR_OTHER_PLAYER,
         NEW, //uživatelé se přihlásili ok, může začít nová hra - zadání svých lodí apod.
@@ -56,11 +60,16 @@ public class Game {
         return currentGameState;
     }
 
+    public Boolean getLastShotResult() {
+        return lastShotResult;
+    }
+
     public Game(Integer gameId, Player playerA) {
         this.gameId = gameId;
         initGameBoard();
         this.playerA = playerA;
         this.currentGameState = GameState.WAITING_FOR_OTHER_PLAYER;
+        informPlayers();
     }
 
     public Player getCurrentlyNotPlayingPlayer() {
@@ -87,5 +96,9 @@ public class Game {
                 this.fields.add(new GameField(letters[i], String.valueOf(j), "empty"));
             }
         }
+    }
+
+    public void informPlayers() {
+        CommunicationDtosService.informPlayers(this);
     }
 }

@@ -108,13 +108,6 @@ public class TCPServer implements ServerListener{
     public void clientConnected(Player client, ObjectOutputStream out) {
         System.out.println("CLIENT " + client + " connected");
         handlePlayerSplitIntoGames(client);
-        ServerDto dto = new ServerDto();
-        dto.playerPoints = 10;
-        try {
-            client.out.writeObject(dto);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -156,9 +149,5 @@ public class TCPServer implements ServerListener{
         } else {
             return gameId;
         }
-    }
-
-    public void informPlayer( ) {
-
     }
 }
