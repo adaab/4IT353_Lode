@@ -40,11 +40,15 @@ public class CommunicationDtosService {
         dto.playerPoints = player.getPoints();
         dto.playerFields = player.getPlayerFields();
         dto.ships = player.getShips();
-        dto.opponentId = game.getOpponentForPlayer(player).getId();
-        dto.opponentPoints = game.getOpponentForPlayer(player).getPoints();
-        dto.opponentField = game.getOpponentForPlayer(player).getPlayerFields();
-        dto.destroyedOpponentsShips = game.getOpponentForPlayer(player).destroyedShips();
+        Player opponent = game.getOpponentForPlayer(player);
+        if (opponent != null) {
+            dto.opponentId = opponent.getId();
+            dto.opponentPoints = opponent.getPoints();
+            dto.opponentField = opponent.getPlayerFields();
+            dto.destroyedOpponentsShips = opponent.destroyedShips();
+        }
         dto.shotResult = game.getLastShotResult();
+        dto.gameId = game.getGameId();
         return dto;
     }
 }

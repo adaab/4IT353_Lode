@@ -1,5 +1,6 @@
 package logic;
 
+import comm.ClientDto;
 import comm.CommunicationDtosService;
 
 import java.util.ArrayList;
@@ -69,7 +70,6 @@ public class Game {
         initGameBoard();
         this.playerA = playerA;
         this.currentGameState = GameState.WAITING_FOR_OTHER_PLAYER;
-        informPlayers();
     }
 
     public Player getCurrentlyNotPlayingPlayer() {
@@ -81,6 +81,8 @@ public class Game {
     }
 
     public Player getOpponentForPlayer(Player p) {
+        System.out.println("Player" + p);
+        System.out.println("p.getId()" + p.getId());
         if (p.getId().equals(playerA.getId())) {
             return playerB;
         } else {
@@ -100,5 +102,20 @@ public class Game {
 
     public void informPlayers() {
         CommunicationDtosService.informPlayers(this);
+    }
+
+    public void processClientMessage(Player p, ClientDto dto) {
+        Player messagingPlayer = null;
+        if (p.equals(playerA)) {
+            messagingPlayer = playerA;
+        } else if (p.equals(playerB)) {
+            messagingPlayer = playerB;
+        }
+        if (messagingPlayer != null) {
+            if (messagingPlayer.getId() == null) {
+                messagingPlayer.setId(dto.id);
+            }
+            informPlayers();
+        }
     }
 }

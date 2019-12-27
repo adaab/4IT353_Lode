@@ -119,6 +119,7 @@ public class TCPServer implements ServerListener{
     public void recievedInput(Player client, Object msg) {
         ClientDto dto = (ClientDto) msg;
         System.out.println("DTO " + client + " msg: " + dto.id);
+        games.get(dto.gameId).processClientMessage(client, dto);
     }
 
     @Override
@@ -138,6 +139,7 @@ public class TCPServer implements ServerListener{
             //TODO maybe start game
         }
         client.setGameId(lastInitiatedGameId);
+        sendInitServerDto(client, lastInitiatedGameId);
         System.out.println("PLAYER: " + client);
     }
 
@@ -148,6 +150,19 @@ public class TCPServer implements ServerListener{
             return generateNextGameId();
         } else {
             return gameId;
+        }
+    }
+
+    private void sendInitServerDto(Player client, Integer gameId) {
+        ServerDto dto = new ServerDto();
+        dto.id = client.getId();
+        dto.playerPoints = client.getPoints();
+        dto.gameState = Game.GameState.WAITING_FOR_OTHER_PLAYER;
+        dto.gameId = gameId;
+        try {
+            client.out.writeObject(dto);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

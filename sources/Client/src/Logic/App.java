@@ -26,6 +26,7 @@ public class App implements Subject {
     public String opponentId;
     public Integer opponentPoints;
     public ArrayList opponentField;
+    public Integer gameId;
 
 
     public App() {
@@ -74,6 +75,7 @@ public class App implements Subject {
             if (dto.gameState.equals(Game.GameState.WAITING_FOR_OTHER_PLAYER)) {
                 System.out.println("WAITING FOR OTHER PLAYER");
                 this.player = dto.id;
+                this.gameId = dto.gameId;
                 //TODO inicializace obrazovky "čekám"
             } else {
                 if (dto.gameState.equals("NEW")) {

@@ -20,4 +20,5 @@ public class ServerDto implements Serializable {
     public Integer opponentPoints; //body soupeře
     public ArrayList<GameField> opponentField; //pole soupeře pro aktualizaci klienta
     public ArrayList<Ship> destroyedOpponentsShips; //destroyed opponents ships - for client update
+    public Integer gameId;
 }
