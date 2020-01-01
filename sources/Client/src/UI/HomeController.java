@@ -46,6 +46,7 @@ public Pane contentLoaderPane;
         String jmeno = name.getText();
         ClientDto logIn = new ClientDto();
         logIn.id = jmeno;
+        logIn.gameId = app.gameId;
         try{
             app.getServer().send(logIn);
         } catch (IOException e) {

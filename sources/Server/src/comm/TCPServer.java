@@ -108,13 +108,6 @@ public class TCPServer implements ServerListener{
     public void clientConnected(Player client, ObjectOutputStream out) {
         System.out.println("CLIENT " + client + " connected");
         handlePlayerSplitIntoGames(client);
-        ServerDto dto = new ServerDto();
-        dto.playerPoints = 10;
-        try {
-            client.out.writeObject(dto);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -126,6 +119,7 @@ public class TCPServer implements ServerListener{
     public void recievedInput(Player client, Object msg) {
         ClientDto dto = (ClientDto) msg;
         System.out.println("DTO " + client + " msg: " + dto.id);
+        games.get(dto.gameId).processClientMessage(client, dto);
     }
 
     @Override
@@ -136,9 +130,8 @@ public class TCPServer implements ServerListener{
     private void handlePlayerSplitIntoGames(Player client) {
         if (games.get(lastInitiatedGameId) == null || games.get(lastInitiatedGameId).getPlayerB() != null) {
             Integer nextGameId = generateNextGameId();
-            games.put(nextGameId, new Game(nextGameId));
+            games.put(nextGameId, new Game(nextGameId, client));
             lastInitiatedGameId = nextGameId;
-            client.setGameId(lastInitiatedGameId);
             System.out.println("started new game " + lastInitiatedGameId);
         } else {
             games.get(lastInitiatedGameId).setPlayerB(client);
@@ -146,6 +139,7 @@ public class TCPServer implements ServerListener{
             //TODO maybe start game
         }
         client.setGameId(lastInitiatedGameId);
+        sendInitServerDto(client, lastInitiatedGameId);
         System.out.println("PLAYER: " + client);
     }
 
@@ -159,7 +153,16 @@ public class TCPServer implements ServerListener{
         }
     }
 
-    public void informPlayer( ) {
-
+    private void sendInitServerDto(Player client, Integer gameId) {
+        ServerDto dto = new ServerDto();
+        dto.id = client.getId();
+        dto.playerPoints = client.getPoints();
+        dto.gameState = Game.GameState.WAITING_FOR_OTHER_PLAYER;
+        dto.gameId = gameId;
+        try {
+            client.out.writeObject(dto);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -1,5 +1,8 @@
 package logic;
 
+import comm.ClientDto;
+import comm.CommunicationDtosService;
+
 import java.util.ArrayList;
 
 public class Game {
@@ -7,7 +10,18 @@ public class Game {
     private ArrayList<GameField> fields;
     private Player playerA;
     private Player playerB;
+    private Player currentlyPlaying;
     private Boolean isGameRunning;
+
+    private Boolean lastShotResult;
+    public enum GameState {
+        WAITING_FOR_OTHER_PLAYER,
+        NEW, //uživatelé se přihlásili ok, může začít nová hra - zadání svých lodí apod.
+        PLAYING, //hra probíhá - dto jen pro aktualizaci polí po výstřelu
+        WIN,
+        LOSS
+    }
+    private GameState currentGameState;
 
     public Integer getGameId() {
         return gameId;
@@ -35,9 +49,45 @@ public class Game {
         this.playerB.setGameId(this.gameId);
     }
 
-    public Game(Integer gameId) {
+    public Player getCurrentlyPlaying() {
+        return currentlyPlaying;
+    }
+
+    public void setCurrentlyPlaying(Player currentlyPlaying) {
+        this.currentlyPlaying = currentlyPlaying;
+    }
+
+    public GameState getCurrentGameState() {
+        return currentGameState;
+    }
+
+    public Boolean getLastShotResult() {
+        return lastShotResult;
+    }
+
+    public Game(Integer gameId, Player playerA) {
         this.gameId = gameId;
         initGameBoard();
+        this.playerA = playerA;
+        this.currentGameState = GameState.WAITING_FOR_OTHER_PLAYER;
+    }
+
+    public Player getCurrentlyNotPlayingPlayer() {
+        if (currentlyPlaying.getId().equals(playerA.getId())) {
+            return playerB;
+        } else {
+            return playerA;
+        }
+    }
+
+    public Player getOpponentForPlayer(Player p) {
+        System.out.println("Player" + p);
+        System.out.println("p.getId()" + p.getId());
+        if (p.getId().equals(playerA.getId())) {
+            return playerB;
+        } else {
+            return playerA;
+        }
     }
 
     private void initGameBoard() {
@@ -47,6 +97,25 @@ public class Game {
             for (int j = 1 ; j <= 12 ; j++){
                 this.fields.add(new GameField(letters[i], String.valueOf(j), "empty"));
             }
+        }
+    }
+
+    public void informPlayers() {
+        CommunicationDtosService.informPlayers(this);
+    }
+
+    public void processClientMessage(Player p, ClientDto dto) {
+        Player messagingPlayer = null;
+        if (p.equals(playerA)) {
+            messagingPlayer = playerA;
+        } else if (p.equals(playerB)) {
+            messagingPlayer = playerB;
+        }
+        if (messagingPlayer != null) {
+            if (messagingPlayer.getId() == null) {
+                messagingPlayer.setId(dto.id);
+            }
+            informPlayers();
         }
     }
 }

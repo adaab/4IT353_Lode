@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import logic.Game;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,12 +20,13 @@ public class App implements Subject {
     private Set<Observer> Observers;
     public Client server;
     public String player;
-    public String gameState;
+    public Game.GameState gameState;
     public Integer playerPoints;
     public ArrayList playerField;
     public String opponentId;
     public Integer opponentPoints;
     public ArrayList opponentField;
+    public Integer gameId;
 
 
     public App() {
@@ -70,30 +72,32 @@ public class App implements Subject {
         if (dto.error != null) {
             //TODO somehow handle the error
         } else {
-            if (dto.gameState.equals("WAITING_FOR_OTHER_PLAYER")) {
+            if (dto.gameState.equals(Game.GameState.WAITING_FOR_OTHER_PLAYER)) {
+                System.out.println("WAITING FOR OTHER PLAYER");
                 this.player = dto.id;
+                this.gameId = dto.gameId;
                 //TODO inicializace obrazovky "čekám"
             } else {
-                if (dto.gameState.equals("NEW")) {
+                if (dto.gameState.equals(Game.GameState.NEW)) {
                     this.gameState = dto.gameState;
                     this.player = dto.id;
                     this.playerPoints = dto.playerPoints;
-                    this.playerField = dto.playerField;
+                    this.playerField = dto.playerFields;
                     this.opponentId = dto.opponentId;
                     this.opponentPoints = dto.opponentPoints;
                     this.opponentField = dto.opponentField;
                     //TODO inicializuje novou hru - zadávání svých lodí
                 } else {
-                    if (dto.gameState.equals("PLAYING")) {
+                    if (dto.gameState.equals(Game.GameState.PLAYING)) {
                         this.playerPoints = dto.playerPoints;
-                        this.playerField = dto.playerField;
+                        this.playerField = dto.playerFields;
                         this.opponentPoints = dto.opponentPoints;
                         this.opponentField = dto.opponentField;
                     } else {
-                        if (dto.gameState.equals("WIN")) {
+                        if (dto.gameState.equals(Game.GameState.WIN)) {
                             //TODO inicializuje obrazovku konec a zobrazí výhru
                         } else {
-                            if (dto.gameState.equals("LOSS")) {
+                            if (dto.gameState.equals(Game.GameState.LOSS)) {
                                 //TODO inicializuje obrazovku konec a zobrazí prohru
                             }
                         }
