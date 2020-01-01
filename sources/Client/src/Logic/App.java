@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import logic.Game;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ public class App implements Subject {
     public Stage stage;
     public HomeController controller;
     public GameController gameController;
+    public Integer gameId;
 
 
     public App(Stage stage, HomeController controller) {
@@ -80,7 +82,9 @@ public class App implements Subject {
             //TODO somehow handle the error
         } else {
             if (dto.gameState.equals(Game.GameState.WAITING_FOR_OTHER_PLAYER)) {
+                System.out.println("WAITING FOR OTHER PLAYER");
                 this.player = dto.id;
+                this.gameId = dto.gameId;
                 getInfoScreen();
                 //TODO inicializace obrazovky "čekám"
             } else {
@@ -95,16 +99,16 @@ public class App implements Subject {
                     getGameScreen();
                     //TODO inicializuje novou hru - zadávání svých lodí
                 } else {
-                    if (dto.gameState.equals("PLAYING")) {
+                    if (dto.gameState.equals(Game.GameState.PLAYING)) {
                         this.playerPoints = dto.playerPoints;
                         this.playerField = dto.playerFields;
                         this.opponentPoints = dto.opponentPoints;
                         this.opponentField = dto.opponentField;
                     } else {
-                        if (dto.gameState.equals("WIN")) {
+                        if (dto.gameState.equals(Game.GameState.WIN)) {
                             //TODO inicializuje obrazovku konec a zobrazí výhru
                         } else {
-                            if (dto.gameState.equals("LOSS")) {
+                            if (dto.gameState.equals(Game.GameState.LOSS)) {
                                 //TODO inicializuje obrazovku konec a zobrazí prohru
                             }
                         }
@@ -147,4 +151,3 @@ public class App implements Subject {
         return playerField;
     }
 }
-
