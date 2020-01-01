@@ -17,6 +17,8 @@ public class Start extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
+        Thread main = Thread.currentThread();
+
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/home.fxml"));
         VBox root = loader.load();
@@ -28,7 +30,7 @@ public class Start extends Application {
         scene.getStylesheets().add("styles.css");
         primaryStage.show();
 
-        App app = new App(primaryStage, controller);
+        App app = new App(primaryStage, controller, main);
         controller.inicializuj(app);
     }
 

@@ -34,13 +34,16 @@ public class App implements Subject {
     public HomeController controller;
     public GameController gameController;
     public Integer gameId;
+    public Thread main;
 
 
-    public App(Stage stage, HomeController controller) {
-        Observers = new HashSet<>();
-        server = new Client("localhost", 8888, this);
+    public App(Stage stage, HomeController controller, Thread main) {
         this.stage = stage;
         this.controller = controller;
+        this.main = main;
+
+        Observers = new HashSet<>();
+        server = new Client("localhost", 8888, this, main);
     }
 
     @Override

@@ -3,6 +3,7 @@ package Logic;
 import Logic.ClientListener;
 import comm.ClientDto;
 import comm.ServerDto;
+import javafx.application.Platform;
 
 import java.io.*;
 import java.net.Socket;
@@ -15,8 +16,10 @@ public class Client implements ClientListener {
     private ObjectOutputStream out;
     private boolean open = true;
     private App app;
-    public Client(String ip, int port, App app){
+    private Thread main;
+    public Client(String ip, int port, App app, Thread main){
         this.app = app;
+        this.main = main;
         try{
             socket=new Socket(ip, port);
             out = new ObjectOutputStream(socket.getOutputStream());
@@ -113,7 +116,16 @@ public class Client implements ClientListener {
     public void recivedInput(Object msg) throws IOException {
         ServerDto dto = (ServerDto) msg;
         System.out.println("DTO " + dto + " msg: " + dto.playerPoints);
-        app.processResponse(dto);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    app.processResponse(dto);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @Override
