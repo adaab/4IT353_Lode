@@ -45,6 +45,7 @@ public Pane contentLoaderPane;
         String jmeno = name.getText();
         ClientDto logIn = new ClientDto();
         logIn.id = jmeno;
+        logIn.gameId = app.gameId;
 
         /* TODO AFTER SERVER CAN RESPOND
         try{

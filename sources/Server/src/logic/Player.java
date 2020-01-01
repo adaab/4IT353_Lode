@@ -30,6 +30,10 @@ public class Player {
         return id;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public Integer getPoints() {
         return points;
     }
@@ -87,5 +91,19 @@ public class Player {
 
     public String toString() {
         return this.ip + " " + port + " ";
+    }
+
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        } else if (obj == null) {
+            return false;
+        } else if (obj instanceof Player) {
+            Player p = (Player) obj;
+            if (id.equals(p.getId()) || (ip.equals(p.ip) && port.equals(p.port))) {
+                return true;
+            }
+        }
+        return false;
     }
 }

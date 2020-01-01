@@ -12,4 +12,5 @@ public class ClientDto implements Serializable {
     public List<Ship> playerShips;
     public Integer shotX;
     public Integer shotY;
+    public Integer gameId;
 }
