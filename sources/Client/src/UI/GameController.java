@@ -1,9 +1,11 @@
 package UI;
 
 import Logic.App;
+import Logic.Client;
 import Logic.Observer;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.Pane;
+import logic.Game;
 import logic.GameField;
 import logic.Ship;
 import comm.ClientDto;
@@ -890,24 +892,26 @@ public class GameController implements Observer {
     public Pane contentLoaderPane;
     @FXML
     public ProgressIndicator contentLoader;
+    @FXML
+    public Label score;
 
     private App app;
     private List<logic.Ship> ships;
     private Integer shipCount = 0;
     private HashSet<logic.GameField> positions1;
-    public Ship ship1 = new Ship("ship1",3,true, positions1 = new HashSet<logic.GameField>());
+    public Ship ship1 = new Ship("ship1", 3, true, positions1 = new HashSet<logic.GameField>());
     private HashSet<logic.GameField> positions2;
-    public Ship ship2 = new Ship("ship2",3,true, positions2 = new HashSet<logic.GameField>());
+    public Ship ship2 = new Ship("ship2", 3, true, positions2 = new HashSet<logic.GameField>());
     private HashSet<logic.GameField> positions3;
-    public Ship ship3 = new Ship("ship3",5,true, positions3 = new HashSet<logic.GameField>());
+    public Ship ship3 = new Ship("ship3", 5, true, positions3 = new HashSet<logic.GameField>());
     private HashSet<logic.GameField> positions4;
-    public Ship ship4 = new Ship("ship4",4,true, positions4 = new HashSet<logic.GameField>());
+    public Ship ship4 = new Ship("ship4", 4, true, positions4 = new HashSet<logic.GameField>());
     private HashSet<logic.GameField> positions5;
-    public Ship ship5 = new Ship("ship5",4,true, positions5 = new HashSet<logic.GameField>());
+    public Ship ship5 = new Ship("ship5", 4, true, positions5 = new HashSet<logic.GameField>());
     private HashSet<logic.GameField> positions6;
-    public Ship ship6 = new Ship("ship6",4,true, positions6 = new HashSet<logic.GameField>());
+    public Ship ship6 = new Ship("ship6", 4, true, positions6 = new HashSet<logic.GameField>());
     private HashSet<logic.GameField> positions7;
-    public Ship ship7 = new Ship("ship7",4,true, positions7 = new HashSet<logic.GameField>());
+    public Ship ship7 = new Ship("ship7", 4, true, positions7 = new HashSet<logic.GameField>());
     private ArrayList<Button> buttonsWithShips;
 
     private ArrayList<Button> viewFieldButtons;
@@ -917,19 +921,20 @@ public class GameController implements Observer {
     public void update() {
     }
 
-    public void inicializuj(App app){
+    public void inicializuj(App app) {
         this.app = app;
         app.register(this);
         update();
     }
 
-    public void prepareNewGame(){
+    public void prepareNewGame() {
         viewField.setVisible(false);
         boatSelect.setVisible(true);
         loggedUser.setText(app.player);
         opponentLabel.setVisible(false);
+        score.setVisible(false);
         playerLabel.setText("Lodě");
-        instructions.setText("Kliknutím na políčko v herním poli zvolíte část lodi. Povolené varianty lodí vidíte v pravém menu.");
+        instructions.setText("Vaším protivníkem bude "+app.opponentId+".\n"+"Kliknutím na políčko v herním poli zvolíte část lodi. Povolené varianty lodí vidíte v pravém menu.");
         boat2.setOpacity(0.3);
         boat3.setOpacity(0.3);
         boat4.setOpacity(0.3);
@@ -938,69 +943,76 @@ public class GameController implements Observer {
         boat7.setOpacity(0.3);
         ships = new ArrayList<logic.Ship>();
         buttonsWithShips = new ArrayList<Button>();
-        mainFieldButtons = (ArrayList<Button>) Stream.of(A0,A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11,A12,B0,B1,B2,B3,B4,B5,B6,B7,B8,B9,B10,B11,B12,C0,C1,C2,C3,C4,C5,C6,C7,C8,C9,C10,C11,C12,D0,D1,D2,D3,D4,D5,D6,D7,D8,D9,D10,D11,D12,E0,E1,E2,E3,E4,E5,E6,E7,E8,E9,E10,E11,E12,F0,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,G0,G1,G2,G3,G4,G5,G6,G7,G8,G9,G10,G11,G12,H0,H1,H2,H3,H4,H5,H6,H7,H8,H9,H10,H11,H12,I0,I1,I2,I3,I4,I5,I6,I7,I8,I9,I10,I11,I12,J0,J1,J2,J3,J4,J5,J6,J7,J8,J9,J10,J11,J12,K0,K1,K2,K3,K4,K5,K6,K7,K8,K9,K10,K11,K12,L0,L1,L2,L3,L4,L5,L6,L7,L8,L9,L10,L11,L12,M0,M1,M2,M3,M4,M5,M6,M7,M8,M9,M10,M11,M12,N0,N1,N2,N3,N4,N5,N6,N7,N8,N9,N10,N11,N12,O0,O1,O2,O3,O4,O5,O6,O7,O8,O9,O10,O11,O12,P0,P1,P2,P3,P4,P5,P6,P7,P8,P9,P10,P11,P12).collect(Collectors.toList());
-        viewFieldButtons = (ArrayList<Button>) Stream.of(xA0,xA1,xA2,xA3,xA4,xA5,xA6,xA7,xA8,xA9,xA10,xA11,xA12,xB0,xB1,xB2,xB3,xB4,xB5,xB6,xB7,xB8,xB9,xB10,xB11,xB12,xC0,xC1,xC2,xC3,xC4,xC5,xC6,xC7,xC8,xC9,xC10,xC11,xC12,xD0,xD1,xD2,xD3,xD4,xD5,xD6,xD7,xD8,xD9,xD10,xD11,xD12,xE0,xE1,xE2,xE3,xE4,xE5,xE6,xE7,xE8,xE9,xE10,xE11,xE12,xF0,xF1,xF2,xF3,xF4,xF5,xF6,xF7,xF8,xF9,xF10,xF11,xF12,xG0,xG1,xG2,xG3,xG4,xG5,xG6,xG7,xG8,xG9,xG10,xG11,xG12,xH0,xH1,xH2,xH3,xH4,xH5,xH6,xH7,xH8,xH9,xH10,xH11,xH12,xI0,xI1,xI2,xI3,xI4,xI5,xI6,xI7,xI8,xI9,xI10,xI11,xI12,xJ0,xJ1,xJ2,xJ3,xJ4,xJ5,xJ6,xJ7,xJ8,xJ9,xJ10,xJ11,xJ12,xK0,xK1,xK2,xK3,xK4,xK5,xK6,xK7,xK8,xK9,xK10,xK11,xK12,xL0,xL1,xL2,xL3,xL4,xL5,xL6,xL7,xL8,xL9,xL10,xL11,xL12,xM0,xM1,xM2,xM3,xM4,xM5,xM6,xM7,xM8,xM9,xM10,xM11,xM12,xN0,xN1,xN2,xN3,xN4,xN5,xN6,xN7,xN8,xN9,xN10,xN11,xN12,xO0,xO1,xO2,xO3,xO4,xO5,xO6,xO7,xO8,xO9,xO10,xO11,xO12,xP0,xP1,xP2,xP3,xP4,xP5,xP6,xP7,xP8,xP9,xP10,xP11,xP12).collect(Collectors.toList());
+        mainFieldButtons = (ArrayList<Button>) Stream.of(A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, B0, B1, B2, B3, B4, B5, B6, B7, B8, B9, B10, B11, B12, C0, C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, D0, D1, D2, D3, D4, D5, D6, D7, D8, D9, D10, D11, D12, E0, E1, E2, E3, E4, E5, E6, E7, E8, E9, E10, E11, E12, F0, F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12, G0, G1, G2, G3, G4, G5, G6, G7, G8, G9, G10, G11, G12, H0, H1, H2, H3, H4, H5, H6, H7, H8, H9, H10, H11, H12, I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, J0, J1, J2, J3, J4, J5, J6, J7, J8, J9, J10, J11, J12, K0, K1, K2, K3, K4, K5, K6, K7, K8, K9, K10, K11, K12, L0, L1, L2, L3, L4, L5, L6, L7, L8, L9, L10, L11, L12, M0, M1, M2, M3, M4, M5, M6, M7, M8, M9, M10, M11, M12, N0, N1, N2, N3, N4, N5, N6, N7, N8, N9, N10, N11, N12, O0, O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, P0, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12).collect(Collectors.toList());
+        viewFieldButtons = (ArrayList<Button>) Stream.of(xA0, xA1, xA2, xA3, xA4, xA5, xA6, xA7, xA8, xA9, xA10, xA11, xA12, xB0, xB1, xB2, xB3, xB4, xB5, xB6, xB7, xB8, xB9, xB10, xB11, xB12, xC0, xC1, xC2, xC3, xC4, xC5, xC6, xC7, xC8, xC9, xC10, xC11, xC12, xD0, xD1, xD2, xD3, xD4, xD5, xD6, xD7, xD8, xD9, xD10, xD11, xD12, xE0, xE1, xE2, xE3, xE4, xE5, xE6, xE7, xE8, xE9, xE10, xE11, xE12, xF0, xF1, xF2, xF3, xF4, xF5, xF6, xF7, xF8, xF9, xF10, xF11, xF12, xG0, xG1, xG2, xG3, xG4, xG5, xG6, xG7, xG8, xG9, xG10, xG11, xG12, xH0, xH1, xH2, xH3, xH4, xH5, xH6, xH7, xH8, xH9, xH10, xH11, xH12, xI0, xI1, xI2, xI3, xI4, xI5, xI6, xI7, xI8, xI9, xI10, xI11, xI12, xJ0, xJ1, xJ2, xJ3, xJ4, xJ5, xJ6, xJ7, xJ8, xJ9, xJ10, xJ11, xJ12, xK0, xK1, xK2, xK3, xK4, xK5, xK6, xK7, xK8, xK9, xK10, xK11, xK12, xL0, xL1, xL2, xL3, xL4, xL5, xL6, xL7, xL8, xL9, xL10, xL11, xL12, xM0, xM1, xM2, xM3, xM4, xM5, xM6, xM7, xM8, xM9, xM10, xM11, xM12, xN0, xN1, xN2, xN3, xN4, xN5, xN6, xN7, xN8, xN9, xN10, xN11, xN12, xO0, xO1, xO2, xO3, xO4, xO5, xO6, xO7, xO8, xO9, xO10, xO11, xO12, xP0, xP1, xP2, xP3, xP4, xP5, xP6, xP7, xP8, xP9, xP10, xP11, xP12).collect(Collectors.toList());
     }
 
     public void handleFieldSelect(javafx.event.ActionEvent actionEvent) {
         source = (Button) actionEvent.getSource();
-        source.setStyle("-fx-background-color: #216164");
         String id = source.getId();
-        buttonsWithShips.add(source);
-        shipCount++;
-        if(shipCount<=ship1.getSize()){
-            ship1.getPositions().add(new logic.GameField(id.substring(0,1),id.substring(1), GameField.FieldState.ship));
-            if(shipCount==ship1.getSize()){
+
+        if (app.gameState.equals(Game.GameState.NEW)) {
+            source.setStyle("-fx-background-color: #216164");
+            buttonsWithShips.add(source);
+            shipCount++;
+            if (shipCount <= ship1.getSize()) {
+                ship1.getPositions().add(new logic.GameField(id.substring(0, 1), id.substring(1), GameField.FieldState.ship));
+                if (shipCount == ship1.getSize()) {
                     ships.add(ship1);
                     boat1.setImage(new Image("/icons/tetris (1)_done.png"));
                     boat2.setOpacity(1);
-            }
-        } else if(shipCount<=(ship1.getSize()+ship2.getSize())) {
-                ship2.getPositions().add(new logic.GameField(id.substring(0,1), id.substring(1), GameField.FieldState.ship));
-                if (shipCount == (ship1.getSize()+ship2.getSize())) {
+                }
+            } else if (shipCount <= (ship1.getSize() + ship2.getSize())) {
+                ship2.getPositions().add(new logic.GameField(id.substring(0, 1), id.substring(1), GameField.FieldState.ship));
+                if (shipCount == (ship1.getSize() + ship2.getSize())) {
                     ships.add(ship2);
                     boat2.setImage(new Image("/icons/tetris (1)_done.png"));
                     boat3.setOpacity(1);
                 }
-        } else if (shipCount <= (ship1.getSize()+ship2.getSize()+ship3.getSize())) {
-                    ship3.getPositions().add(new logic.GameField(id.substring(0,1), id.substring(1), GameField.FieldState.ship));
-                    if (shipCount == (ship1.getSize()+ship2.getSize()+ship3.getSize())) {
-                        ships.add(ship3);
-                        boat3.setImage(new Image("/icons/tetris (4)_done.png"));
-                        boat4.setOpacity(1);
-                    }
-        } else if (shipCount <= (ship1.getSize()+ship2.getSize()+ship3.getSize()+ship4.getSize())) {
-                        ship4.getPositions().add(new logic.GameField(id.substring(0,1), id.substring(1), GameField.FieldState.ship));
-                        if (shipCount == (ship1.getSize()+ship2.getSize()+ship3.getSize()+ship4.getSize())) {
-                            ships.add(ship4);
-                            boat4.setImage(new Image("/icons/tetris_done.png"));
-                            boat5.setOpacity(1);
-                        }
-        } else if (shipCount <= (ship1.getSize()+ship2.getSize()+ship3.getSize()+ship4.getSize()+ship5.getSize())) {
-                            ship5.getPositions().add(new logic.GameField(id.substring(0,1), id.substring(1), GameField.FieldState.ship));
-                            if (shipCount == (ship1.getSize()+ship2.getSize()+ship3.getSize()+ship4.getSize()+ship5.getSize())) {
-                                ships.add(ship5);
-                                boat5.setImage(new Image("/icons/tetris_done.png"));
-                                boat6.setOpacity(1);
-                            }
-        } else if (shipCount <= (ship1.getSize()+ship2.getSize()+ship3.getSize()+ship4.getSize()+ship5.getSize()+ship6.getSize())) {
-                                ship6.getPositions().add(new logic.GameField(id.substring(0,1), id.substring(1), GameField.FieldState.ship));
-                                if (shipCount == (ship1.getSize()+ship2.getSize()+ship3.getSize()+ship4.getSize()+ship5.getSize()+ship6.getSize())) {
-                                    ships.add(ship6);
-                                    boat6.setImage(new Image("/icons/tetris (2)_done.png"));
-                                    boat7.setOpacity(1);
-                                }
-        } else if (shipCount <= (ship1.getSize()+ship2.getSize()+ship3.getSize()+ship4.getSize()+ship5.getSize()+ship6.getSize()+ship7.getSize())) {
-                                    ship7.getPositions().add(new logic.GameField(id.substring(0,1), id.substring(1), GameField.FieldState.ship));
-                                    if (shipCount == (ship1.getSize()+ship2.getSize()+ship3.getSize()+ship4.getSize()+ship5.getSize()+ship6.getSize()+ship7.getSize())) {
-                                        ships.add(ship7);
-                                        boat7.setImage(new Image("/icons/tetris (3)_done.png"));
-                                        shipsFinished();
-                                    }
+            } else if (shipCount <= (ship1.getSize() + ship2.getSize() + ship3.getSize())) {
+                ship3.getPositions().add(new logic.GameField(id.substring(0, 1), id.substring(1), GameField.FieldState.ship));
+                if (shipCount == (ship1.getSize() + ship2.getSize() + ship3.getSize())) {
+                    ships.add(ship3);
+                    boat3.setImage(new Image("/icons/tetris (4)_done.png"));
+                    boat4.setOpacity(1);
+                }
+            } else if (shipCount <= (ship1.getSize() + ship2.getSize() + ship3.getSize() + ship4.getSize())) {
+                ship4.getPositions().add(new logic.GameField(id.substring(0, 1), id.substring(1), GameField.FieldState.ship));
+                if (shipCount == (ship1.getSize() + ship2.getSize() + ship3.getSize() + ship4.getSize())) {
+                    ships.add(ship4);
+                    boat4.setImage(new Image("/icons/tetris_done.png"));
+                    boat5.setOpacity(1);
+                }
+            } else if (shipCount <= (ship1.getSize() + ship2.getSize() + ship3.getSize() + ship4.getSize() + ship5.getSize())) {
+                ship5.getPositions().add(new logic.GameField(id.substring(0, 1), id.substring(1), GameField.FieldState.ship));
+                if (shipCount == (ship1.getSize() + ship2.getSize() + ship3.getSize() + ship4.getSize() + ship5.getSize())) {
+                    ships.add(ship5);
+                    boat5.setImage(new Image("/icons/tetris_done.png"));
+                    boat6.setOpacity(1);
+                }
+            } else if (shipCount <= (ship1.getSize() + ship2.getSize() + ship3.getSize() + ship4.getSize() + ship5.getSize() + ship6.getSize())) {
+                ship6.getPositions().add(new logic.GameField(id.substring(0, 1), id.substring(1), GameField.FieldState.ship));
+                if (shipCount == (ship1.getSize() + ship2.getSize() + ship3.getSize() + ship4.getSize() + ship5.getSize() + ship6.getSize())) {
+                    ships.add(ship6);
+                    boat6.setImage(new Image("/icons/tetris (2)_done.png"));
+                    boat7.setOpacity(1);
+                }
+            } else if (shipCount <= (ship1.getSize() + ship2.getSize() + ship3.getSize() + ship4.getSize() + ship5.getSize() + ship6.getSize() + ship7.getSize())) {
+                ship7.getPositions().add(new logic.GameField(id.substring(0, 1), id.substring(1), GameField.FieldState.ship));
+                if (shipCount == (ship1.getSize() + ship2.getSize() + ship3.getSize() + ship4.getSize() + ship5.getSize() + ship6.getSize() + ship7.getSize())) {
+                    ships.add(ship7);
+                    boat7.setImage(new Image("/icons/tetris (3)_done.png"));
+                    shipsFinished();
+                }
+            }
+        } else if (app.gameState.equals(Game.GameState.PLAYING)) {
+            source.setStyle("-fx-background-color: #d4cdcd");
+            sendShot(id);
         }
     }
 
-    public void shipsFinished(){
+
+    public void shipsFinished() {
         contentLoaderPane.setVisible(true);
         contentLoader.setVisible(true);
 
@@ -1020,26 +1032,74 @@ public class GameController implements Observer {
         instructions.setText(" ");
         playerLabel.setText("Tvoje lodě");
         opponentLabel.setText("Lodě protivníka");
+        score.setVisible(true);
     }
 
-    public void updateGame(){
+    public void updateGame() {
         //VIEW FIELD UPDATES
-        for(GameField field : app.getPlayerField()){
-            if(field.getFieldState().equals(GameField.FieldState.ship)){
-                for(Button btn : viewFieldButtons){
-                    if(btn.getId().substring(1).equals(field.getPosition())){
+        for (GameField field : app.getPlayerField()) {
+            if (field.getFieldState().equals(GameField.FieldState.ship)) {
+                for (Button btn : viewFieldButtons) {
+                    if (btn.getId().substring(1).equals(field.getPosition())) {
                         btn.setStyle("-fx-background-color: #216164");
                     }
                 }
-            } else if(field.getFieldState().equals(GameField.FieldState.shipHit)){
-                for(Button btn : viewFieldButtons){
+            } else if (field.getFieldState().equals(GameField.FieldState.shipHit)) {
+                for (Button btn : viewFieldButtons) {
                     if (btn.getId().substring(1).equals(field.getPosition())) {
                         btn.setStyle("-fx-background-color: #9E4751");
+                    }
+                }
+            } else if (field.getFieldState().equals(GameField.FieldState.missed)) {
+                for (Button btn : viewFieldButtons) {
+                    if (btn.getId().substring(1).equals(field.getPosition())) {
+                        btn.setStyle("-fx-background-color: #968d8d");
+                    }
+                }
+
+            }
+        }
+
+        //MAIN FIELD UPDATES
+        for (GameField field : app.getOpponentField()) {
+            if (field.getFieldState().equals(GameField.FieldState.missed)) {
+                for (Button btn : mainFieldButtons) {
+                    if (btn.getId().substring(1).equals(field.getPosition())) {
+                        btn.setStyle("-fx-background-color: #968d8d");
+                    }
+                }
+            } else if (field.getFieldState().equals(GameField.FieldState.shipHit)) {
+                for (Button btn : mainFieldButtons) {
+                    if (btn.getId().substring(1).equals(field.getPosition())) {
+                        btn.setStyle("-fx-background-color: #216164");
                     }
                 }
             }
         }
 
+        //POINTS UPDATE
+        score.setText("SKÓRE: "+app.player+": "+app.playerPoints+", "+app.opponentId+": "+app.opponentPoints+"\n");
+        if(app.isMyTurn){
+            instructions.setText("Jste na tahu. Zvolte v hracím poli pole, do kterého chcete vystřelit.");
+            mainField.setDisable(false);
+        } else {
+            instructions.setText("Hraje protivník, prosím počkejte");
+            mainField.setDisable(true);
+        }
 
+        contentLoaderPane.setVisible(false);
+    }
+
+    public void sendShot(String id){
+        ClientDto shot = new ClientDto();
+        shot.gameId = app.gameId;
+        shot.shotX = id.substring(0,1);
+        shot.shotY = id.substring(1);
+        try {
+            app.getServer().send(shot);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        contentLoaderPane.setVisible(true);
     }
 }

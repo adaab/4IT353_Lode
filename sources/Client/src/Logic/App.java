@@ -36,6 +36,7 @@ public class App implements Subject {
     public GameController gameController;
     public Integer gameId;
     public Thread main;
+    public Boolean isMyTurn;
 
 
     public App(Stage stage, HomeController controller, Thread main) {
@@ -93,6 +94,7 @@ public class App implements Subject {
                 //TODO inicializace obrazovky "čekám"
             } else {
                 if (dto.gameState.equals(Game.GameState.NEW)) {
+                    this.gameId = gameId;
                     this.gameState = dto.gameState;
                     this.player = dto.id;
                     //this.playerPoints = dto.playerPoints;
@@ -104,10 +106,12 @@ public class App implements Subject {
                     //TODO inicializuje novou hru - zadávání svých lodí
                 } else {
                     if (dto.gameState.equals(Game.GameState.PLAYING)) {
-                        //this.playerPoints = dto.playerPoints;
+                        this.gameState = dto.gameState;
+                        this.playerPoints = dto.playerPoints;
                         this.playerField = dto.playerFields;
-                        //this.opponentPoints = dto.opponentPoints;
-                        //this.opponentField = dto.opponentField;
+                        this.opponentPoints = dto.opponentPoints;
+                        this.opponentField = dto.opponentField;
+                        this.isMyTurn = dto.isMyTurn;
                         this.gameController.updateGame();
                     } else {
                         if (dto.gameState.equals(Game.GameState.WIN)) {
@@ -154,5 +158,9 @@ public class App implements Subject {
 
     public ArrayList<GameField> getPlayerField() {
         return playerField;
+    }
+
+    public ArrayList<GameField> getOpponentField() {
+        return opponentField;
     }
 }

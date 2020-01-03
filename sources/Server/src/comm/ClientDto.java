@@ -10,7 +10,7 @@ public class ClientDto implements Serializable {
     public String password;
     public Boolean playerReadyToPlay;
     public List<Ship> playerShips;
-    public Integer shotX;
-    public Integer shotY;
+    public String shotX;
+    public String shotY;
     public Integer gameId;
 }

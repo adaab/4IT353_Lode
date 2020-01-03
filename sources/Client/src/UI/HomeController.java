@@ -57,6 +57,8 @@ public Pane contentLoaderPane;
         ServerDto dto = new ServerDto();
         dto.id = "Pepa";
         dto.gameState = NEW;
+        dto.gameId = 254;
+        dto.opponentId = "XXX";
         app.processResponse(dto);
     }
 }

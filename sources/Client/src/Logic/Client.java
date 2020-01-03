@@ -98,7 +98,7 @@ public class Client implements ClientListener {
         }catch(Exception exception){ exception.printStackTrace();}
     }*/
     public void send(ClientDto msg) throws IOException {
-        /* TESTING
+
         ServerDto dto = new ServerDto();
         dto.gameState = Game.GameState.PLAYING;
         ArrayList<GameField> playerFields = new ArrayList<>();
@@ -116,14 +116,36 @@ public class Client implements ClientListener {
         playerFields.get(27).setFieldState(GameField.FieldState.shipHit);
         playerFields.get(47).setFieldState(GameField.FieldState.shipHit);
         dto.playerFields = playerFields;
-        dto.opponentId = "Pepa25";
+        dto.opponentPoints = 25;
+        dto.playerPoints = 45;
+
+        ArrayList<GameField> opponentFields = new ArrayList<>();
+        String[] letters2 = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"};
+        for (int i = 0 ; i < 16 ; i++) {
+            for (int j = 1; j <= 12; j++) {
+                opponentFields.add(new GameField(letters[i], String.valueOf(j), GameField.FieldState.empty));
+            }
+        }
+        opponentFields.get(25).setFieldState(GameField.FieldState.missed);
+        opponentFields.get(38).setFieldState(GameField.FieldState.missed);
+        opponentFields.get(44).setFieldState(GameField.FieldState.missed);
+        opponentFields.get(11).setFieldState(GameField.FieldState.missed);
+        opponentFields.get(5).setFieldState(GameField.FieldState.shipHit);
+        opponentFields.get(27).setFieldState(GameField.FieldState.shipHit);
+        opponentFields.get(47).setFieldState(GameField.FieldState.shipHit);
+
+        dto.opponentField = opponentFields;
+        dto.isMyTurn = true;
+
         app.processResponse(dto);
-        */
+
+        /*
         if(open) {
             out.writeObject(msg);
             out.flush();
             System.out.println("FLUSHED");
         }
+        */
 
     }
 
