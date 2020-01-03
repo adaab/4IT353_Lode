@@ -3,10 +3,15 @@ package Logic;
 import Logic.ClientListener;
 import comm.ClientDto;
 import comm.ServerDto;
+import javafx.application.Platform;
+import logic.Game;
+import logic.GameField;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 
 public class Client implements ClientListener {
@@ -15,8 +20,10 @@ public class Client implements ClientListener {
     private ObjectOutputStream out;
     private boolean open = true;
     private App app;
-    public Client(String ip, int port, App app){
+    private Thread main;
+    public Client(String ip, int port, App app, Thread main){
         this.app = app;
+        this.main = main;
         try{
             socket=new Socket(ip, port);
             out = new ObjectOutputStream(socket.getOutputStream());
@@ -91,12 +98,35 @@ public class Client implements ClientListener {
         }catch(Exception exception){ exception.printStackTrace();}
     }*/
     public void send(ClientDto msg) throws IOException {
-        if(open){
+        /* TESTING
+        ServerDto dto = new ServerDto();
+        dto.gameState = Game.GameState.PLAYING;
+        ArrayList<GameField> playerFields = new ArrayList<>();
+        String[] letters = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"};
+        for (int i = 0 ; i < 16 ; i++) {
+            for (int j = 1; j <= 12; j++) {
+                playerFields.add(new GameField(letters[i], String.valueOf(j), GameField.FieldState.empty));
+            }
+        }
+        playerFields.get(25).setFieldState(GameField.FieldState.ship);
+        playerFields.get(38).setFieldState(GameField.FieldState.ship);
+        playerFields.get(44).setFieldState(GameField.FieldState.ship);
+        playerFields.get(11).setFieldState(GameField.FieldState.ship);
+        playerFields.get(5).setFieldState(GameField.FieldState.shipHit);
+        playerFields.get(27).setFieldState(GameField.FieldState.shipHit);
+        playerFields.get(47).setFieldState(GameField.FieldState.shipHit);
+        dto.playerFields = playerFields;
+        dto.opponentId = "Pepa25";
+        app.processResponse(dto);
+        */
+        if(open) {
             out.writeObject(msg);
             out.flush();
             System.out.println("FLUSHED");
         }
+
     }
+
     public boolean isConnected(){ return open; }
 
     @Override
@@ -110,10 +140,19 @@ public class Client implements ClientListener {
     }
 
     @Override
-    public void recivedInput(Object msg) {
+    public void recivedInput(Object msg) throws IOException {
         ServerDto dto = (ServerDto) msg;
         System.out.println("DTO " + dto + " msg: " + dto.playerPoints);
-        app.processResponse(dto);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    app.processResponse(dto);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @Override
