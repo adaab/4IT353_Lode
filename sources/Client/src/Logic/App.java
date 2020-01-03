@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import comm.ServerDto;
+import logic.GameField;
 
 public class App implements Subject {
     private Set<Observer> Observers;
@@ -26,10 +27,10 @@ public class App implements Subject {
     public String player;
     public Game.GameState gameState;
     public Integer playerPoints;
-    public ArrayList playerField;
+    public ArrayList<GameField> playerField;
     public String opponentId;
     public Integer opponentPoints;
-    public ArrayList opponentField;
+    public ArrayList<GameField> opponentField;
     public Stage stage;
     public HomeController controller;
     public GameController gameController;
@@ -94,8 +95,8 @@ public class App implements Subject {
                 if (dto.gameState.equals(Game.GameState.NEW)) {
                     this.gameState = dto.gameState;
                     this.player = dto.id;
-                    this.playerPoints = dto.playerPoints;
-                    this.playerField = dto.playerFields;
+                    //this.playerPoints = dto.playerPoints;
+                    //this.playerField = dto.playerFields;
                     this.opponentId = dto.opponentId;
                     //this.opponentPoints = dto.opponentPoints;
                     //this.opponentField = dto.opponentField;
@@ -103,10 +104,11 @@ public class App implements Subject {
                     //TODO inicializuje novou hru - zadávání svých lodí
                 } else {
                     if (dto.gameState.equals(Game.GameState.PLAYING)) {
-                        this.playerPoints = dto.playerPoints;
+                        //this.playerPoints = dto.playerPoints;
                         this.playerField = dto.playerFields;
-                        this.opponentPoints = dto.opponentPoints;
-                        this.opponentField = dto.opponentField;
+                        //this.opponentPoints = dto.opponentPoints;
+                        //this.opponentField = dto.opponentField;
+                        this.gameController.updateGame();
                     } else {
                         if (dto.gameState.equals(Game.GameState.WIN)) {
                             //TODO inicializuje obrazovku konec a zobrazí výhru
@@ -150,7 +152,7 @@ public class App implements Subject {
             this.gameController = gameController;
         }
 
-    public ArrayList getPlayerField() {
+    public ArrayList<GameField> getPlayerField() {
         return playerField;
     }
 }

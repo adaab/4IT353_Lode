@@ -23,7 +23,21 @@ public class GameField implements Serializable {
         return x+y;
     }
 
-    public void setState(FieldState state){
-        this.fieldState = state;
+
+    public String getX() {
+        return x;
+    }
+
+
+    public String getY() {
+        return y;
+    }
+
+    public FieldState getFieldState() {
+        return fieldState;
+    }
+
+    public void setFieldState(FieldState fieldState) {
+        this.fieldState = fieldState;
     }
 }
