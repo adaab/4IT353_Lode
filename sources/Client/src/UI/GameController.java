@@ -913,7 +913,7 @@ public class GameController implements Observer {
 
     private ArrayList<Button> viewFieldButtons;
     private ArrayList<Button> mainFieldButtons;
-    private Boolean areShipsOk = true;
+    private Ship currentShip;
 
     @Override
     public void update() {
@@ -950,101 +950,127 @@ public class GameController implements Observer {
         source = (Button) actionEvent.getSource();
         String id = source.getId();
 
+        if(app.gameState.equals(Game.GameState.NEW)){
+            if(buttonsWithShips.contains(source)){
+                buttonsWithShips.remove(source);
+                shipCount--;
+                source.setStyle("-fx-background-color: white");
+                currentShip.getPositions().removeIf((field) -> field.getPosition().equals(id));
+            } else {
+                handleFieldSelectNewField(id);
+            }
+        } else if (app.gameState.equals(Game.GameState.PLAYING)) {
+        source.setStyle("-fx-background-color: #d4cdcd");
+        sendShot(id);
+        }
+    }
+
+    public void handleFieldSelectNewField(String id){
         if (app.gameState.equals(Game.GameState.NEW)) {
             source.setStyle("-fx-background-color: #216164");
             buttonsWithShips.add(source);
             shipCount++;
             if (shipCount <= ship1.getSize()) {
+                currentShip = ship1;
                 ship1.getPositions().add(new logic.GameField(id.substring(0, 1), id.substring(1), GameField.FieldState.ship));
                 if (shipCount == ship1.getSize()) {
-                    if(validateShip(ship1)) {
+                    if (validateShip(ship1)) {
                         ships.add(ship1);
                         boat1.setImage(new Image("/icons/tetris (1)_done.png"));
                         boat2.setOpacity(1);
+                        buttonsWithShips.forEach((btn) -> btn.setDisable(true));
                     } else {
                         score.setVisible(true);
                         score.setText("Vybraná pole netvoří tvar požadované lodi, prosím zvolte správná pole");
                     }
                 }
             } else if (shipCount <= (ship1.getSize() + ship2.getSize())) {
+                currentShip = ship2;
                 ship2.getPositions().add(new logic.GameField(id.substring(0, 1), id.substring(1), GameField.FieldState.ship));
                 if (shipCount == (ship1.getSize() + ship2.getSize())) {
-                    if(validateShip(ship2)) {
+                    if (validateShip(ship2)) {
                         ships.add(ship2);
                         boat2.setImage(new Image("/icons/tetris (1)_done.png"));
                         boat3.setOpacity(1);
+                        buttonsWithShips.forEach((btn) -> btn.setDisable(true));
                     } else {
                         score.setVisible(true);
                         score.setText("Vybraná pole netvoří tvar požadované lodi, prosím zvolte správná pole");
                     }
                 }
             } else if (shipCount <= (ship1.getSize() + ship2.getSize() + ship3.getSize())) {
+                currentShip = ship3;
                 ship3.getPositions().add(new logic.GameField(id.substring(0, 1), id.substring(1), GameField.FieldState.ship));
                 if (shipCount == (ship1.getSize() + ship2.getSize() + ship3.getSize())) {
-                    if(validateShip(ship3)) {
+                    if (validateShip(ship3)) {
                         ships.add(ship3);
                         boat3.setImage(new Image("/icons/tetris (4)_done.png"));
                         boat4.setOpacity(1);
+                        buttonsWithShips.forEach((btn) -> btn.setDisable(true));
                     } else {
                         score.setVisible(true);
                         score.setText("Vybraná pole netvoří tvar požadované lodi, prosím zvolte správná pole");
                     }
                 }
             } else if (shipCount <= (ship1.getSize() + ship2.getSize() + ship3.getSize() + ship4.getSize())) {
+                currentShip = ship4;
                 ship4.getPositions().add(new logic.GameField(id.substring(0, 1), id.substring(1), GameField.FieldState.ship));
                 if (shipCount == (ship1.getSize() + ship2.getSize() + ship3.getSize() + ship4.getSize())) {
-                    if(validateShip(ship4)) {
+                    if (validateShip(ship4)) {
                         ships.add(ship4);
                         boat4.setImage(new Image("/icons/tetris_done.png"));
                         boat5.setOpacity(1);
+                        buttonsWithShips.forEach((btn) -> btn.setDisable(true));
                     } else {
                         score.setVisible(true);
                         score.setText("Vybraná pole netvoří tvar požadované lodi, prosím zvolte správná pole");
                     }
                 }
             } else if (shipCount <= (ship1.getSize() + ship2.getSize() + ship3.getSize() + ship4.getSize() + ship5.getSize())) {
+                currentShip = ship5;
                 ship5.getPositions().add(new logic.GameField(id.substring(0, 1), id.substring(1), GameField.FieldState.ship));
                 if (shipCount == (ship1.getSize() + ship2.getSize() + ship3.getSize() + ship4.getSize() + ship5.getSize())) {
-                    if(validateShip(ship4)) {
+                    if (validateShip(ship4)) {
                         ships.add(ship5);
                         boat5.setImage(new Image("/icons/tetris_done.png"));
                         boat6.setOpacity(1);
+                        buttonsWithShips.forEach((btn) -> btn.setDisable(true));
                     } else {
                         score.setVisible(true);
                         score.setText("Vybraná pole netvoří tvar požadované lodi, prosím zvolte správná pole");
                     }
                 }
             } else if (shipCount <= (ship1.getSize() + ship2.getSize() + ship3.getSize() + ship4.getSize() + ship5.getSize() + ship6.getSize())) {
+                currentShip = ship6;
                 ship6.getPositions().add(new logic.GameField(id.substring(0, 1), id.substring(1), GameField.FieldState.ship));
                 if (shipCount == (ship1.getSize() + ship2.getSize() + ship3.getSize() + ship4.getSize() + ship5.getSize() + ship6.getSize())) {
-                    if(validateShip(ship6)) {
+                    if (validateShip(ship6)) {
                         ships.add(ship6);
                         boat6.setImage(new Image("/icons/tetris (2)_done.png"));
                         boat7.setOpacity(1);
+                        buttonsWithShips.forEach((btn) -> btn.setDisable(true));
                     } else {
                         score.setVisible(true);
                         score.setText("Vybraná pole netvoří tvar požadované lodi, prosím zvolte správná pole");
                     }
                 }
             } else if (shipCount <= (ship1.getSize() + ship2.getSize() + ship3.getSize() + ship4.getSize() + ship5.getSize() + ship6.getSize() + ship7.getSize())) {
+                currentShip = ship7;
                 ship7.getPositions().add(new logic.GameField(id.substring(0, 1), id.substring(1), GameField.FieldState.ship));
                 if (shipCount == (ship1.getSize() + ship2.getSize() + ship3.getSize() + ship4.getSize() + ship5.getSize() + ship6.getSize() + ship7.getSize())) {
-                    if(validateShip(ship7)) {
+                    if (validateShip(ship7)) {
                         ships.add(ship7);
                         boat7.setImage(new Image("/icons/tetris (3)_done.png"));
                         shipsFinished();
+                        buttonsWithShips.forEach((btn) -> btn.disableProperty());
                     } else {
                         score.setVisible(true);
                         score.setText("Vybraná pole netvoří tvar požadované lodi, prosím zvolte správná pole");
                     }
                 }
             }
-        } else if (app.gameState.equals(Game.GameState.PLAYING)) {
-            source.setStyle("-fx-background-color: #d4cdcd");
-            sendShot(id);
         }
     }
-
 
     public void shipsFinished() {
         contentLoaderPane.setVisible(true);
@@ -1197,7 +1223,7 @@ public class GameController implements Observer {
                     isOkX = ((x[0]*x[1]*x[2]*x[3]==x[0]*(x[0]+1)*(x[0]+2)*(x[0]) || (x[0]*x[1]*x[2]*x[3]==x[0]*(x[0]+1)*(x[0]+2)*(x[0]+2)) && ((y[0]*y[1]*y[2]*y[3] == Math.round(Math.pow(y[0],3)*(y[0]+1))) || (y[0]*y[1]*y[2]*y[3] == Math.round(Math.pow(y[0],3)*(y[0]-1))))));
                     isOkY = ((y[0]*y[1]*y[2]*y[3]==y[0]*(y[0]+1)*(y[0]+2)*(y[0]) || (y[0]*y[1]*y[2]*y[3]==y[0]*(y[0]+1)*(y[0]+2)*(y[0]+2)) && ((x[0]*x[1]*x[2]*x[3] == Math.round(Math.pow(x[0],3)*(x[0]+1))) || (x[0]*x[1]*x[2]*x[3] == Math.round(Math.pow(x[0],3)*(x[0]-1))))));
                 } else if(ship.getName().equals("ship7")){
-                    isOkX = (x[0]*x[1]*x[2]*x[3]==x[0]*(x[0]+1)*(x[0]+2)*(x[0])) && ((y[0]*y[1]*y[2]*y[3] == Math.round(Math.pow(y[0],2)*(Math.round(Math.pow((y[0]+1),2)))) || (y[0]*y[1]*y[2]*y[3] == Math.round(Math.pow(y[0],3)*(Math.round(Math.pow((y[0]-1),2)))))));
+                    isOkX = (x[0]*x[1]*x[2]*x[3]==x[0]*(x[0]+1)*(x[0]+2)*(x[0]+1)) && ((y[0]*y[1]*y[2]*y[3] == Math.round(Math.pow(y[0],2)*(Math.round(Math.pow((y[0]+1),2)))) || (y[0]*y[1]*y[2]*y[3] == Math.round(Math.pow(y[0],3)*(Math.round(Math.pow((y[0]-1),2)))))));
                     isOkY = (y[0]*y[1]*y[2]*y[3]==y[0]*(y[0]+1)*(y[0]+2)*(y[0]+1)) && ((x[0]*x[1]*x[2]*x[3] == Math.round(Math.pow(x[0],3)*(Math.round(Math.pow((x[0]+1),2)))) || (x[0]*x[1]*x[2]*x[3] == Math.round(Math.pow(x[0],3)*(Math.round(Math.pow((x[0]-1),2)))))));
                 }
             }
