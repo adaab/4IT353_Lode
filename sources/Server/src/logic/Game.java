@@ -6,6 +6,7 @@ import logic.GameField.FieldState;
 import java.util.ArrayList;
 
 public class Game {
+    private static final String[] BOARD_LETTERS = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"};
     private Integer gameId;
     private ArrayList<GameField> fields;
     private Player playerA;
@@ -98,10 +99,10 @@ public class Game {
 
     private void initGameBoard() {
         fields = new ArrayList<>();
-        String[] letters = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"};
+
         for (int i = 0 ; i < 16 ; i++){
             for (int j = 1 ; j <= 12 ; j++){
-                this.fields.add(new GameField(letters[i], String.valueOf(j), FieldState.empty));
+                this.fields.add(new GameField(BOARD_LETTERS[i], String.valueOf(j), FieldState.empty));
             }
         }
     }
@@ -129,10 +130,34 @@ public class Game {
                         }
                         break;
                     case PLAYING:
+                        if (currentlyPlaying.getId().equals(messagingPlayer.getId())) {
+                            handlePlayerShot(dto);
+                        }
                         //TODO  handle players turns
+
                 }
             }
             informPlayers();
         }
+    }
+
+    private void handlePlayerShot(ClientDto dto) {
+        GameField field = findOpponentShipPosition(dto.shotX, dto.shotY);
+        if (field != null) {
+            field.setFieldState(FieldState.shipHit);
+        }
+    }
+
+    private GameField findOpponentShipPosition(String x, String y) {
+        GameField field = null;
+        Player opponent = getOpponentForPlayer(currentlyPlaying);
+        for (Ship s : opponent.getShips()) {
+            for (GameField gameField : s.getPositions()) {
+                if (x.equals(gameField.getX()) && y.equals(gameField.getY())) {
+                    field = gameField;
+                }
+            }
+        }
+        return field;
     }
 }

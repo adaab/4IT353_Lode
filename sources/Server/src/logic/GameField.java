@@ -40,4 +40,20 @@ public class GameField implements Serializable {
     public void setFieldState(FieldState fieldState) {
         this.fieldState = fieldState;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        // self check
+        if (this == o)
+            return true;
+        // null check
+        if (o == null)
+            return false;
+        // type check and cast
+        if (getClass() != o.getClass())
+            return false;
+        GameField field = (GameField) o;
+        // field comparison
+        return (this.x.equals(field.getX()) && this.y.equals(field.getY()));
+    }
 }

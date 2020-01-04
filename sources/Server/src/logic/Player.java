@@ -100,7 +100,7 @@ public class Player {
             return false;
         } else if (obj instanceof Player) {
             Player p = (Player) obj;
-            if (id.equals(p.getId()) || (ip.equals(p.ip) && port.equals(p.port))) {
+            if ((id != null && id.equals(p.getId())) || (ip.equals(p.ip) && port.equals(p.port))) {
                 return true;
             }
         }

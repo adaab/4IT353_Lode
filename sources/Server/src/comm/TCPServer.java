@@ -159,7 +159,7 @@ public class TCPServer implements ServerListener{
         ServerDto dto = new ServerDto();
         dto.id = client.getId();
         dto.playerPoints = client.getPoints();
-        dto.gameState = Game.GameState.WAITING_FOR_OTHER_PLAYER;
+        dto.gameState = Game.GameState.INITIALIZED;
         dto.gameId = gameId;
         try {
             client.out.writeObject(dto);
