@@ -1029,7 +1029,6 @@ public class GameController implements Observer {
         viewField.disabledProperty();
         opponentLabel.setVisible(true);
         buttonsWithShips.forEach((btn) -> btn.setStyle("-fx-background-color: white"));
-        instructions.setText(" ");
         playerLabel.setText("Tvoje lodě");
         opponentLabel.setText("Lodě protivníka");
         score.setVisible(true);
@@ -1064,13 +1063,13 @@ public class GameController implements Observer {
         for (GameField field : app.getOpponentField()) {
             if (field.getFieldState().equals(GameField.FieldState.missed)) {
                 for (Button btn : mainFieldButtons) {
-                    if (btn.getId().substring(1).equals(field.getPosition())) {
+                    if (btn.getId().equals(field.getPosition())) {
                         btn.setStyle("-fx-background-color: #968d8d");
                     }
                 }
             } else if (field.getFieldState().equals(GameField.FieldState.shipHit)) {
                 for (Button btn : mainFieldButtons) {
-                    if (btn.getId().substring(1).equals(field.getPosition())) {
+                    if (btn.getId().equals(field.getPosition())) {
                         btn.setStyle("-fx-background-color: #216164");
                     }
                 }

@@ -99,53 +99,53 @@ public class Client implements ClientListener {
     }*/
     public void send(ClientDto msg) throws IOException {
 
-        ServerDto dto = new ServerDto();
-        dto.gameState = Game.GameState.PLAYING;
-        ArrayList<GameField> playerFields = new ArrayList<>();
-        String[] letters = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"};
-        for (int i = 0 ; i < 16 ; i++) {
-            for (int j = 1; j <= 12; j++) {
-                playerFields.add(new GameField(letters[i], String.valueOf(j), GameField.FieldState.empty));
+        if (app.gameState.equals(Game.GameState.NEW)) {
+            ServerDto dto = new ServerDto();
+            dto.gameState = Game.GameState.PLAYING;
+            ArrayList<GameField> playerFields = new ArrayList<>();
+            String[] letters = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"};
+            for (int i = 0; i < 16; i++) {
+                for (int j = 1; j <= 12; j++) {
+                    playerFields.add(new GameField(letters[i], String.valueOf(j), GameField.FieldState.empty));
+                }
             }
-        }
-        playerFields.get(25).setFieldState(GameField.FieldState.ship);
-        playerFields.get(38).setFieldState(GameField.FieldState.ship);
-        playerFields.get(44).setFieldState(GameField.FieldState.ship);
-        playerFields.get(11).setFieldState(GameField.FieldState.ship);
-        playerFields.get(5).setFieldState(GameField.FieldState.shipHit);
-        playerFields.get(27).setFieldState(GameField.FieldState.shipHit);
-        playerFields.get(47).setFieldState(GameField.FieldState.shipHit);
-        dto.playerFields = playerFields;
-        dto.opponentPoints = 25;
-        dto.playerPoints = 45;
+            playerFields.get(25).setFieldState(GameField.FieldState.ship);
+            playerFields.get(38).setFieldState(GameField.FieldState.ship);
+            playerFields.get(44).setFieldState(GameField.FieldState.ship);
+            playerFields.get(11).setFieldState(GameField.FieldState.ship);
+            playerFields.get(5).setFieldState(GameField.FieldState.shipHit);
+            playerFields.get(27).setFieldState(GameField.FieldState.shipHit);
+            playerFields.get(47).setFieldState(GameField.FieldState.shipHit);
+            dto.playerFields = playerFields;
+            dto.opponentPoints = 25;
+            dto.playerPoints = 45;
 
-        ArrayList<GameField> opponentFields = new ArrayList<>();
-        String[] letters2 = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"};
-        for (int i = 0 ; i < 16 ; i++) {
-            for (int j = 1; j <= 12; j++) {
-                opponentFields.add(new GameField(letters[i], String.valueOf(j), GameField.FieldState.empty));
+            ArrayList<GameField> opponentFields = new ArrayList<>();
+
+            String[] letters2 = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"};
+            for (int i = 0; i < 16; i++) {
+                for (int j = 1; j <= 12; j++) {
+                    opponentFields.add(new GameField(letters2[i], String.valueOf(j), GameField.FieldState.empty));
+                }
             }
-        }
-        opponentFields.get(25).setFieldState(GameField.FieldState.missed);
-        opponentFields.get(38).setFieldState(GameField.FieldState.missed);
-        opponentFields.get(44).setFieldState(GameField.FieldState.missed);
-        opponentFields.get(11).setFieldState(GameField.FieldState.missed);
-        opponentFields.get(5).setFieldState(GameField.FieldState.shipHit);
-        opponentFields.get(27).setFieldState(GameField.FieldState.shipHit);
-        opponentFields.get(47).setFieldState(GameField.FieldState.shipHit);
+            opponentFields.get(25).setFieldState(GameField.FieldState.missed);
+            opponentFields.get(38).setFieldState(GameField.FieldState.missed);
+            opponentFields.get(44).setFieldState(GameField.FieldState.missed);
+            opponentFields.get(11).setFieldState(GameField.FieldState.missed);
+            opponentFields.get(5).setFieldState(GameField.FieldState.shipHit);
+            opponentFields.get(27).setFieldState(GameField.FieldState.shipHit);
+            opponentFields.get(47).setFieldState(GameField.FieldState.shipHit);
 
-        dto.opponentField = opponentFields;
-        dto.isMyTurn = true;
+            dto.opponentField = opponentFields;
+            dto.isMyTurn = true;
 
-        app.processResponse(dto);
-
-        /*
-        if(open) {
+            app.processResponse(dto);
+        } else {
+            if(open) {
             out.writeObject(msg);
             out.flush();
             System.out.println("FLUSHED");
-        }
-        */
+        }}
 
     }
 
