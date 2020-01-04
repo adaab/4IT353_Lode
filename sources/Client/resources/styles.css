@@ -68,3 +68,10 @@
     -fx-alignment: center;
 }
 
+.fieldBoxSmall{
+    -fx-background-color: white;
+    -fx-pref-width: 18;
+    -fx-pref-height: 15;
+    -fx-alignment: center;
+}
+
