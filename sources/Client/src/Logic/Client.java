@@ -13,6 +13,9 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+import static logic.Game.GameState.LOSS;
+import static logic.Game.GameState.WIN;
+
 
 public class Client implements ClientListener {
     private Socket socket;
@@ -98,6 +101,14 @@ public class Client implements ClientListener {
         }catch(Exception exception){ exception.printStackTrace();}
     }*/
     public void send(ClientDto msg) throws IOException {
+        //TODO this is just for testing purposes
+        /*if(app.gameState.equals(Game.GameState.NEW)){
+            ServerDto dto = new ServerDto();
+            dto.gameState = LOSS;
+            dto.playerPoints = 28;
+            dto.opponentPoints = 44;
+            app.processResponse(dto);
+        }
 
         if (app.gameState.equals(Game.GameState.NEW)) {
             ServerDto dto = new ServerDto();
@@ -140,12 +151,12 @@ public class Client implements ClientListener {
             dto.isMyTurn = true;
 
             app.processResponse(dto);
-        } else {
+        } else {*/
             if(open) {
             out.writeObject(msg);
             out.flush();
             System.out.println("FLUSHED");
-        }}
+        }//}
 
     }
 
