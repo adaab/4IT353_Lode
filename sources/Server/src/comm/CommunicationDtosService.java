@@ -13,19 +13,23 @@ public class CommunicationDtosService {
 
     public static void informPlayers(Game game) {
         if (game.getPlayerA() != null) {
-            Player pA = game.getPlayerA();
-            ServerDto dto = fillServerResponseForPlayer(game, pA);
             try {
-                pA.out.writeObject(dto);
+                Player pA = game.getPlayerA();
+                if (pA.getId() != null) {
+                    ServerDto dto = fillServerResponseForPlayer(game, pA);
+                    pA.out.writeObject(dto);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
         if (game.getPlayerB() != null) {
-            Player pB = game.getPlayerB();
-            ServerDto dto = fillServerResponseForPlayer(game, pB);
             try {
-                pB.out.writeObject(dto);
+                Player pB = game.getPlayerB();
+                if (pB.getId() != null) {
+                    ServerDto dto = fillServerResponseForPlayer(game, pB);
+                    pB.out.writeObject(dto);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -38,17 +42,21 @@ public class CommunicationDtosService {
         dto.playerPoints = player.getPoints();
         dto.gameState = game.getCurrentGameState();
         dto.playerPoints = player.getPoints();
-        dto.playerFields = player.getPlayerFields();
+        dto.playerFields = player.getFields();
         dto.ships = player.getShips();
         Player opponent = game.getOpponentForPlayer(player);
         if (opponent != null) {
             dto.opponentId = opponent.getId();
             dto.opponentPoints = opponent.getPoints();
-            dto.opponentField = opponent.getPlayerFields();
+            dto.opponentField = opponent.getFields();
             dto.destroyedOpponentsShips = opponent.destroyedShips();
         }
         dto.shotResult = game.getLastShotResult();
         dto.gameId = game.getGameId();
+        if (game.getCurrentlyPlaying() != null) {
+            dto.isMyTurn = game.getCurrentlyPlaying().getId().equals(player.getId());
+        }
         return dto;
     }
+
 }

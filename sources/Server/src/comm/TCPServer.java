@@ -130,7 +130,9 @@ public class TCPServer implements ServerListener{
     private void handlePlayerSplitIntoGames(Player client) {
         if (games.get(lastInitiatedGameId) == null || games.get(lastInitiatedGameId).getPlayerB() != null) {
             Integer nextGameId = generateNextGameId();
-            games.put(nextGameId, new Game(nextGameId, client));
+            Game newGame = new Game(nextGameId);
+            newGame.setPlayerA(client);
+            games.put(nextGameId, newGame);
             lastInitiatedGameId = nextGameId;
             System.out.println("started new game " + lastInitiatedGameId);
         } else {
@@ -157,7 +159,7 @@ public class TCPServer implements ServerListener{
         ServerDto dto = new ServerDto();
         dto.id = client.getId();
         dto.playerPoints = client.getPoints();
-        dto.gameState = Game.GameState.WAITING_FOR_OTHER_PLAYER;
+        dto.gameState = Game.GameState.INITIALIZED;
         dto.gameId = gameId;
         try {
             client.out.writeObject(dto);

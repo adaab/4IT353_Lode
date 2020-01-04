@@ -6,6 +6,7 @@ import logic.Ship;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ServerDto implements Serializable {
     public String id;
@@ -13,7 +14,7 @@ public class ServerDto implements Serializable {
     public Integer playerPoints;
     public Game.GameState gameState;
     public ArrayList<GameField> playerFields;
-    public ArrayList<Ship> ships;
+    public List<Ship> ships;
     public Exception e;
     public Error error;
     public String opponentId; //jméno soupeře

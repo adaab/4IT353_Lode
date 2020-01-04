@@ -6,8 +6,8 @@ import logic.GameField.FieldState;
 import java.util.ArrayList;
 
 public class Game {
+    public static final String[] BOARD_LETTERS = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"};
     private Integer gameId;
-    private ArrayList<GameField> fields;
     private Player playerA;
     private Player playerB;
     private Player currentlyPlaying;
@@ -15,6 +15,7 @@ public class Game {
 
     private Boolean lastShotResult;
     public enum GameState {
+        INITIALIZED,
         WAITING_FOR_OTHER_PLAYER,
         NEW, //uživatelé se přihlásili ok, může začít nová hra - zadání svých lodí apod.
         PLAYING, //hra probíhá - dto jen pro aktualizaci polí po výstřelu
@@ -38,6 +39,7 @@ public class Game {
     public void setPlayerA(Player playerA) {
         this.playerA = playerA;
         this.playerA.setGameId(this.gameId);
+        this.currentGameState = GameState.WAITING_FOR_OTHER_PLAYER;
     }
 
     public Player getPlayerB() {
@@ -47,6 +49,7 @@ public class Game {
     public void setPlayerB(Player playerB) {
         this.playerB = playerB;
         this.playerB.setGameId(this.gameId);
+        startNewGame();
     }
 
     public Player getCurrentlyPlaying() {
@@ -65,11 +68,14 @@ public class Game {
         return lastShotResult;
     }
 
-    public Game(Integer gameId, Player playerA) {
+    public Game(Integer gameId) {
         this.gameId = gameId;
-        initGameBoard();
-        this.playerA = playerA;
-        this.currentGameState = GameState.WAITING_FOR_OTHER_PLAYER;
+        this.currentGameState = GameState.INITIALIZED;
+    }
+
+    public void startNewGame() {
+        currentlyPlaying = playerA;
+        this.currentGameState = GameState.NEW;
     }
 
     public Player getCurrentlyNotPlayingPlayer() {
@@ -85,18 +91,10 @@ public class Game {
         System.out.println("p.getId()" + p.getId());
         if (p.getId().equals(playerA.getId())) {
             return playerB;
-        } else {
+        } else if (p.getId().equals(playerB.getId())) {
             return playerA;
-        }
-    }
-
-    private void initGameBoard() {
-        fields = new ArrayList<>();
-        String[] letters = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"};
-        for (int i = 0 ; i < 16 ; i++){
-            for (int j = 1 ; j <= 12 ; j++){
-                this.fields.add(new GameField(letters[i], String.valueOf(j), FieldState.empty));
-            }
+        } else {
+            return null;
         }
     }
 
@@ -114,8 +112,45 @@ public class Game {
         if (messagingPlayer != null) {
             if (messagingPlayer.getId() == null) {
                 messagingPlayer.setId(dto.id);
+            } else {
+                switch (this.currentGameState) {
+                    case NEW:
+                        messagingPlayer.setShips(dto.playerShips);
+                        if (playerA.readyToPlay() && playerB.readyToPlay()) {
+                            this.currentGameState = GameState.PLAYING;
+                        }
+                        break;
+                    case PLAYING:
+                        if (currentlyPlaying.getId().equals(messagingPlayer.getId())) {
+                            handlePlayerShot(dto);
+                            currentlyPlaying = getOpponentForPlayer(currentlyPlaying);
+                        }
+                        //TODO  handle players turns
+
+                }
             }
             informPlayers();
         }
+    }
+
+    private void handlePlayerShot(ClientDto dto) {
+        GameField field = findOpponentShipPosition(dto.shotX, dto.shotY);
+        if (field != null) {
+            field.setFieldState(FieldState.shipHit);
+        }
+        getOpponentForPlayer(currentlyPlaying).updatePlayerFields();
+    }
+
+    private GameField findOpponentShipPosition(String x, String y) {
+        GameField field = null;
+        Player opponent = getOpponentForPlayer(currentlyPlaying);
+        for (Ship s : opponent.getShips()) {
+            for (GameField gameField : s.getPositions()) {
+                if (x.equals(gameField.getX()) && y.equals(gameField.getY())) {
+                    field = gameField;
+                }
+            }
+        }
+        return field;
     }
 }

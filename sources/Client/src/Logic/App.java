@@ -86,15 +86,20 @@ public class App implements Subject {
         if (dto.error != null) {
             //TODO somehow handle the error
         } else {
-            if (dto.gameState.equals(Game.GameState.WAITING_FOR_OTHER_PLAYER)) {
-                System.out.println("WAITING FOR OTHER PLAYER");
-                this.player = dto.id;
-                this.gameId = dto.gameId;
-                getInfoScreen();
-                //TODO inicializace obrazovky "čekám"
-            } else {
-                if (dto.gameState.equals(Game.GameState.NEW)) {
-                    this.gameId = gameId;
+            switch (dto.gameState) {
+                case INITIALIZED:
+                    this.gameId = dto.gameId;
+                    break;
+                case WAITING_FOR_OTHER_PLAYER:
+                    System.out.println("WAITING FOR OTHER PLAYER");
+                    this.player = dto.id;
+                    this.gameId = dto.gameId;
+                    this.gameState = dto.gameState;
+                    getInfoScreen();
+                    //TODO inicializace obrazovky "čekám"
+                    break;
+                case NEW:
+                    this.gameId = dto.gameId;
                     this.gameState = dto.gameState;
                     this.player = dto.id;
                     //this.playerPoints = dto.playerPoints;
@@ -104,31 +109,27 @@ public class App implements Subject {
                     //this.opponentField = dto.opponentField;
                     getGameScreen();
                     //TODO inicializuje novou hru - zadávání svých lodí
-                } else {
-                    if (dto.gameState.equals(Game.GameState.PLAYING)) {
-                        this.gameState = dto.gameState;
-                        this.playerPoints = dto.playerPoints;
-                        this.playerField = dto.playerFields;
-                        this.opponentPoints = dto.opponentPoints;
-                        this.opponentField = dto.opponentField;
-                        this.isMyTurn = dto.isMyTurn;
-                        this.gameController.updateGame();
-                    } else {
-                        if (dto.gameState.equals(Game.GameState.WIN)) {
-                            this.gameState = dto.gameState;
-                            this.playerPoints = dto.playerPoints;
-                            this.opponentPoints = dto.opponentPoints;
-                            getInfoScreen();
-                        } else {
-                            if (dto.gameState.equals(Game.GameState.LOSS)) {
-                                this.gameState = dto.gameState;
-                                this.playerPoints = dto.playerPoints;
-                                this.opponentPoints = dto.opponentPoints;
-                                getInfoScreen();
-                            }
-                        }
-                    }
-                }
+                    break;
+                case PLAYING:
+                    this.gameState = dto.gameState;
+                    this.playerPoints = dto.playerPoints;
+                    this.playerField = dto.playerFields;
+                    this.opponentPoints = dto.opponentPoints;
+                    this.opponentField = dto.opponentField;
+                    this.isMyTurn = dto.isMyTurn;
+                    this.gameController.updateGame();
+                    break;
+                case WIN:
+                    this.gameState = dto.gameState;
+                    this.playerPoints = dto.playerPoints;
+                    this.opponentPoints = dto.opponentPoints;
+                    getInfoScreen();
+                    break;
+                case LOSS:
+                    this.gameState = dto.gameState;
+                    this.playerPoints = dto.playerPoints;
+                    this.opponentPoints = dto.opponentPoints;
+                    getInfoScreen();
             }
         }
     }
@@ -161,7 +162,6 @@ public class App implements Subject {
             loader.setLocation(getClass().getResource("/game.fxml"));
             VBox root = loader.load();
             GameController gameController = loader.getController();
-
             Scene scene = new Scene(root, 1040, 800);
             stage.setScene(scene);
             stage.setTitle("Battleship");
