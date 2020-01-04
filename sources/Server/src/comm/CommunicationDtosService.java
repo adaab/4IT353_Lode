@@ -13,19 +13,23 @@ public class CommunicationDtosService {
 
     public static void informPlayers(Game game) {
         if (game.getPlayerA() != null) {
-            Player pA = game.getPlayerA();
-            ServerDto dto = fillServerResponseForPlayer(game, pA);
             try {
-                pA.out.writeObject(dto);
+                Player pA = game.getPlayerA();
+                if (pA.getId() != null) {
+                    ServerDto dto = fillServerResponseForPlayer(game, pA);
+                    pA.out.writeObject(dto);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
         if (game.getPlayerB() != null) {
-            Player pB = game.getPlayerB();
-            ServerDto dto = fillServerResponseForPlayer(game, pB);
             try {
-                pB.out.writeObject(dto);
+                Player pB = game.getPlayerB();
+                if (pB.getId() != null) {
+                    ServerDto dto = fillServerResponseForPlayer(game, pB);
+                    pB.out.writeObject(dto);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -50,6 +50,7 @@ public class Game {
     public void setPlayerB(Player playerB) {
         this.playerB = playerB;
         this.playerB.setGameId(this.gameId);
+        startNewGame();
     }
 
     public Player getCurrentlyPlaying() {
@@ -92,8 +93,10 @@ public class Game {
         System.out.println("p.getId()" + p.getId());
         if (p.getId().equals(playerA.getId())) {
             return playerB;
-        } else {
+        } else if (p.getId().equals(playerB.getId())) {
             return playerA;
+        } else {
+            return null;
         }
     }
 
