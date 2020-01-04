@@ -49,6 +49,7 @@ public class CommunicationDtosService {
         }
         dto.shotResult = game.getLastShotResult();
         dto.gameId = game.getGameId();
+        dto.isMyTurn = game.getCurrentlyPlaying().getId().equals(player.getId());
         return dto;
     }
 }

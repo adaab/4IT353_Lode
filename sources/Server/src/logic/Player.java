@@ -12,7 +12,7 @@ public class Player {
     private Integer gameId;
     private String id;
     private Integer points;
-    private ArrayList<Ship> ships;
+    private List<Ship> ships;
 
     private ArrayList<GameField> playerFields;
     private ArrayList<GameField> foundOutOpponentFields;
@@ -50,11 +50,11 @@ public class Player {
         return foundOutOpponentFields;
     }
 
-    public ArrayList<Ship> getShips() {
+    public List<Ship> getShips() {
         return ships;
     }
 
-    public void setShips(ArrayList<Ship> ships) {
+    public void setShips(List<Ship> ships) {
         this.ships = ships;
     }
 

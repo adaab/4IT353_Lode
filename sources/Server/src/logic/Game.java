@@ -15,6 +15,7 @@ public class Game {
 
     private Boolean lastShotResult;
     public enum GameState {
+        INITIALIZED,
         WAITING_FOR_OTHER_PLAYER,
         NEW, //uživatelé se přihlásili ok, může začít nová hra - zadání svých lodí apod.
         PLAYING, //hra probíhá - dto jen pro aktualizaci polí po výstřelu
@@ -38,6 +39,7 @@ public class Game {
     public void setPlayerA(Player playerA) {
         this.playerA = playerA;
         this.playerA.setGameId(this.gameId);
+        this.currentGameState = GameState.WAITING_FOR_OTHER_PLAYER;
     }
 
     public Player getPlayerB() {
@@ -65,11 +67,15 @@ public class Game {
         return lastShotResult;
     }
 
-    public Game(Integer gameId, Player playerA) {
+    public Game(Integer gameId) {
         this.gameId = gameId;
+        this.currentGameState = GameState.INITIALIZED;
+    }
+
+    public void startNewGame() {
         initGameBoard();
-        this.playerA = playerA;
-        this.currentGameState = GameState.WAITING_FOR_OTHER_PLAYER;
+        currentlyPlaying = playerA;
+        this.currentGameState = GameState.NEW;
     }
 
     public Player getCurrentlyNotPlayingPlayer() {
@@ -114,6 +120,17 @@ public class Game {
         if (messagingPlayer != null) {
             if (messagingPlayer.getId() == null) {
                 messagingPlayer.setId(dto.id);
+            } else {
+                switch (this.currentGameState) {
+                    case NEW:
+                        messagingPlayer.setShips(dto.playerShips);
+                        if (playerA.readyToPlay() && playerB.readyToPlay()) {
+                            this.currentGameState = GameState.PLAYING;
+                        }
+                        break;
+                    case PLAYING:
+                        //TODO  handle players turns
+                }
             }
             informPlayers();
         }
