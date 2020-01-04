@@ -17,10 +17,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -916,6 +913,7 @@ public class GameController implements Observer {
 
     private ArrayList<Button> viewFieldButtons;
     private ArrayList<Button> mainFieldButtons;
+    private Ship currentShip;
 
     @Override
     public void update() {
@@ -948,69 +946,131 @@ public class GameController implements Observer {
     }
 
     public void handleFieldSelect(javafx.event.ActionEvent actionEvent) {
+        score.setVisible(false);
         source = (Button) actionEvent.getSource();
         String id = source.getId();
 
+        if(app.gameState.equals(Game.GameState.NEW)){
+            if(buttonsWithShips.contains(source)){
+                buttonsWithShips.remove(source);
+                shipCount--;
+                source.setStyle("-fx-background-color: white");
+                currentShip.getPositions().removeIf((field) -> field.getPosition().equals(id));
+            } else {
+                handleFieldSelectNewField(id);
+            }
+        } else if (app.gameState.equals(Game.GameState.PLAYING)) {
+        source.setStyle("-fx-background-color: #d4cdcd");
+        sendShot(id);
+        }
+    }
+
+    public void handleFieldSelectNewField(String id){
         if (app.gameState.equals(Game.GameState.NEW)) {
             source.setStyle("-fx-background-color: #216164");
             buttonsWithShips.add(source);
             shipCount++;
             if (shipCount <= ship1.getSize()) {
+                currentShip = ship1;
                 ship1.getPositions().add(new logic.GameField(id.substring(0, 1), id.substring(1), GameField.FieldState.ship));
                 if (shipCount == ship1.getSize()) {
-                    ships.add(ship1);
-                    boat1.setImage(new Image("/icons/tetris (1)_done.png"));
-                    boat2.setOpacity(1);
+                    if (validateShip(ship1)) {
+                        ships.add(ship1);
+                        boat1.setImage(new Image("/icons/tetris (1)_done.png"));
+                        boat2.setOpacity(1);
+                        buttonsWithShips.forEach((btn) -> btn.setDisable(true));
+                    } else {
+                        score.setVisible(true);
+                        score.setText("Vybraná pole netvoří tvar požadované lodi, prosím zvolte správná pole");
+                    }
                 }
             } else if (shipCount <= (ship1.getSize() + ship2.getSize())) {
+                currentShip = ship2;
                 ship2.getPositions().add(new logic.GameField(id.substring(0, 1), id.substring(1), GameField.FieldState.ship));
                 if (shipCount == (ship1.getSize() + ship2.getSize())) {
-                    ships.add(ship2);
-                    boat2.setImage(new Image("/icons/tetris (1)_done.png"));
-                    boat3.setOpacity(1);
+                    if (validateShip(ship2)) {
+                        ships.add(ship2);
+                        boat2.setImage(new Image("/icons/tetris (1)_done.png"));
+                        boat3.setOpacity(1);
+                        buttonsWithShips.forEach((btn) -> btn.setDisable(true));
+                    } else {
+                        score.setVisible(true);
+                        score.setText("Vybraná pole netvoří tvar požadované lodi, prosím zvolte správná pole");
+                    }
                 }
             } else if (shipCount <= (ship1.getSize() + ship2.getSize() + ship3.getSize())) {
+                currentShip = ship3;
                 ship3.getPositions().add(new logic.GameField(id.substring(0, 1), id.substring(1), GameField.FieldState.ship));
                 if (shipCount == (ship1.getSize() + ship2.getSize() + ship3.getSize())) {
-                    ships.add(ship3);
-                    boat3.setImage(new Image("/icons/tetris (4)_done.png"));
-                    boat4.setOpacity(1);
+                    if (validateShip(ship3)) {
+                        ships.add(ship3);
+                        boat3.setImage(new Image("/icons/tetris (4)_done.png"));
+                        boat4.setOpacity(1);
+                        buttonsWithShips.forEach((btn) -> btn.setDisable(true));
+                    } else {
+                        score.setVisible(true);
+                        score.setText("Vybraná pole netvoří tvar požadované lodi, prosím zvolte správná pole");
+                    }
                 }
             } else if (shipCount <= (ship1.getSize() + ship2.getSize() + ship3.getSize() + ship4.getSize())) {
+                currentShip = ship4;
                 ship4.getPositions().add(new logic.GameField(id.substring(0, 1), id.substring(1), GameField.FieldState.ship));
                 if (shipCount == (ship1.getSize() + ship2.getSize() + ship3.getSize() + ship4.getSize())) {
-                    ships.add(ship4);
-                    boat4.setImage(new Image("/icons/tetris_done.png"));
-                    boat5.setOpacity(1);
+                    if (validateShip(ship4)) {
+                        ships.add(ship4);
+                        boat4.setImage(new Image("/icons/tetris_done.png"));
+                        boat5.setOpacity(1);
+                        buttonsWithShips.forEach((btn) -> btn.setDisable(true));
+                    } else {
+                        score.setVisible(true);
+                        score.setText("Vybraná pole netvoří tvar požadované lodi, prosím zvolte správná pole");
+                    }
                 }
             } else if (shipCount <= (ship1.getSize() + ship2.getSize() + ship3.getSize() + ship4.getSize() + ship5.getSize())) {
+                currentShip = ship5;
                 ship5.getPositions().add(new logic.GameField(id.substring(0, 1), id.substring(1), GameField.FieldState.ship));
                 if (shipCount == (ship1.getSize() + ship2.getSize() + ship3.getSize() + ship4.getSize() + ship5.getSize())) {
-                    ships.add(ship5);
-                    boat5.setImage(new Image("/icons/tetris_done.png"));
-                    boat6.setOpacity(1);
+                    if (validateShip(ship4)) {
+                        ships.add(ship5);
+                        boat5.setImage(new Image("/icons/tetris_done.png"));
+                        boat6.setOpacity(1);
+                        buttonsWithShips.forEach((btn) -> btn.setDisable(true));
+                    } else {
+                        score.setVisible(true);
+                        score.setText("Vybraná pole netvoří tvar požadované lodi, prosím zvolte správná pole");
+                    }
                 }
             } else if (shipCount <= (ship1.getSize() + ship2.getSize() + ship3.getSize() + ship4.getSize() + ship5.getSize() + ship6.getSize())) {
+                currentShip = ship6;
                 ship6.getPositions().add(new logic.GameField(id.substring(0, 1), id.substring(1), GameField.FieldState.ship));
                 if (shipCount == (ship1.getSize() + ship2.getSize() + ship3.getSize() + ship4.getSize() + ship5.getSize() + ship6.getSize())) {
-                    ships.add(ship6);
-                    boat6.setImage(new Image("/icons/tetris (2)_done.png"));
-                    boat7.setOpacity(1);
+                    if (validateShip(ship6)) {
+                        ships.add(ship6);
+                        boat6.setImage(new Image("/icons/tetris (2)_done.png"));
+                        boat7.setOpacity(1);
+                        buttonsWithShips.forEach((btn) -> btn.setDisable(true));
+                    } else {
+                        score.setVisible(true);
+                        score.setText("Vybraná pole netvoří tvar požadované lodi, prosím zvolte správná pole");
+                    }
                 }
             } else if (shipCount <= (ship1.getSize() + ship2.getSize() + ship3.getSize() + ship4.getSize() + ship5.getSize() + ship6.getSize() + ship7.getSize())) {
+                currentShip = ship7;
                 ship7.getPositions().add(new logic.GameField(id.substring(0, 1), id.substring(1), GameField.FieldState.ship));
                 if (shipCount == (ship1.getSize() + ship2.getSize() + ship3.getSize() + ship4.getSize() + ship5.getSize() + ship6.getSize() + ship7.getSize())) {
-                    ships.add(ship7);
-                    boat7.setImage(new Image("/icons/tetris (3)_done.png"));
-                    shipsFinished();
+                    if (validateShip(ship7)) {
+                        ships.add(ship7);
+                        boat7.setImage(new Image("/icons/tetris (3)_done.png"));
+                        shipsFinished();
+                        buttonsWithShips.forEach((btn) -> btn.disableProperty());
+                    } else {
+                        score.setVisible(true);
+                        score.setText("Vybraná pole netvoří tvar požadované lodi, prosím zvolte správná pole");
+                    }
                 }
             }
-        } else if (app.gameState.equals(Game.GameState.PLAYING)) {
-            source.setStyle("-fx-background-color: #d4cdcd");
-            sendShot(id);
         }
     }
-
 
     public void shipsFinished() {
         contentLoaderPane.setVisible(true);
@@ -1100,5 +1160,75 @@ public class GameController implements Observer {
             e.printStackTrace();
         }
         contentLoaderPane.setVisible(true);
+    }
+
+    public boolean validateShip(Ship ship) {
+        Boolean isOkX = false;
+        Boolean isOkY = false;
+        String[] lettersHelp = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"};
+        ArrayList<String> letters = new ArrayList<String>();
+        Arrays.stream(lettersHelp).forEachOrdered(letters::add);
+        ArrayList<GameField> positions = new ArrayList<>(ship.getPositions());
+
+        //3 fields default for all ships
+        String x1 = positions.get(0).getX();
+        String x2 = positions.get(1).getX();
+        String x3 = positions.get(2).getX();
+
+        Integer x1Pos = letters.indexOf(x1);
+        Integer x2Pos = letters.indexOf(x2);
+        Integer x3Pos = letters.indexOf(x3);
+
+        Integer y1 = Integer.parseInt(positions.get(0).getY());
+        Integer y2 = Integer.parseInt(positions.get(1).getY());
+        Integer y3 = Integer.parseInt(positions.get(2).getY());
+
+        //ship1 validation
+        if (ship.getName().equals("ship1") || ship.getName().equals("ship2")) {
+            Integer[] x = {x1Pos,x2Pos,x3Pos};
+            Integer[] y = {y1,y2,y3};
+            Arrays.sort(x);
+            Arrays.sort(y);
+
+            isOkX = (x[0]*x[1]*x[2] == x[0]*(x[0]+1)*(x[0]+2)) && (y[0]*y[1]*y[2] ==  Math.round(Math.pow(y[0],3)));
+            isOkY = (y[0]*y[1]*y[2] == y[0]*(y[0]+1)*(y[0]+2)) && (x[0]*x[1]*x[2] == Math.round(Math.pow(x[0],3)));
+        } else if(ship.getName().equals("ship3") || ship.getName().equals("ship4") || ship.getName().equals("ship5") || ship.getName().equals("ship6") || ship.getName().equals("ship7")){
+            //4th field default only for ship3,4,5,6,7
+            String x4 = positions.get(3).getX();
+            Integer x4Pos = letters.indexOf(x4);
+            Integer y4 = Integer.parseInt(positions.get(3).getY());
+
+            if(ship.getName().equals("ship3")) {
+                //5th field default only for ship3
+                String x5 = positions.get(4).getX();
+                Integer x5Pos = letters.indexOf(x5);
+                Integer y5 = Integer.parseInt(positions.get(4).getY());
+                Integer[] x = {x1Pos, x2Pos, x3Pos, x4Pos, x5Pos};
+                Integer[] y = {y1, y2, y3, y4, y5};
+                Arrays.sort(x);
+                Arrays.sort(y);
+
+                isOkX = (x[0]*x[1]*x[2]*x[3]*x[4] == x[0]*(x[0]+1)*(x[0]+2)*(x[0]+3)*(x[0]+4)) && (y[0]*y[1]*y[2]*y[3]*y[4] == Math.round(Math.pow(y[0],5)));
+                isOkY = (y[0]*y[1]*y[2]*y[3]*y[4] == y[0]*(y[0]+1)*(y[0]+2)*(y[0]+3)*(y[0]+4)) && (x[0]*x[1]*x[2]*x[3]*x[4] == Math.round(Math.pow(x[0], 5)));
+            } else {
+                Integer[] x = {x1Pos, x2Pos, x3Pos, x4Pos};
+                Integer[] y = {y1, y2, y3, y4};
+                Arrays.sort(x);
+                Arrays.sort(y);
+
+                if(ship.getName().equals("ship4") || ship.getName().equals("ship5")){
+                    isOkX = (x[0]*x[1]*x[2]*x[3]==x[0]*(x[0]+1)*(x[0]+2)*(x[0]+1)) && ((y[0]*y[1]*y[2]*y[3] == Math.round(Math.pow(y[0],3)*(y[0]+1))) || (y[0]*y[1]*y[2]*y[3] == Math.round(Math.pow(y[0],3)*(y[0]-1))));
+                    isOkY = (y[0]*y[1]*y[2]*y[3]==y[0]*(y[0]+1)*(y[0]+2)*(y[0]+1)) && ((x[0]*x[1]*x[2]*x[3] == Math.round(Math.pow(x[0],3)*(x[0]+1))) || (x[0]*x[1]*x[2]*x[3] == Math.round(Math.pow(x[0],3)*(x[0]-1))));
+                } else if(ship.getName().equals("ship6")){
+                    isOkX = ((x[0]*x[1]*x[2]*x[3]==x[0]*(x[0]+1)*(x[0]+2)*(x[0]) || (x[0]*x[1]*x[2]*x[3]==x[0]*(x[0]+1)*(x[0]+2)*(x[0]+2)) && ((y[0]*y[1]*y[2]*y[3] == Math.round(Math.pow(y[0],3)*(y[0]+1))) || (y[0]*y[1]*y[2]*y[3] == Math.round(Math.pow(y[0],3)*(y[0]-1))))));
+                    isOkY = ((y[0]*y[1]*y[2]*y[3]==y[0]*(y[0]+1)*(y[0]+2)*(y[0]) || (y[0]*y[1]*y[2]*y[3]==y[0]*(y[0]+1)*(y[0]+2)*(y[0]+2)) && ((x[0]*x[1]*x[2]*x[3] == Math.round(Math.pow(x[0],3)*(x[0]+1))) || (x[0]*x[1]*x[2]*x[3] == Math.round(Math.pow(x[0],3)*(x[0]-1))))));
+                } else if(ship.getName().equals("ship7")){
+                    isOkX = (x[0]*x[1]*x[2]*x[3]==x[0]*(x[0]+1)*(x[0]+2)*(x[0]+1)) && ((y[0]*y[1]*y[2]*y[3] == Math.round(Math.pow(y[0],2)*(Math.round(Math.pow((y[0]+1),2)))) || (y[0]*y[1]*y[2]*y[3] == Math.round(Math.pow(y[0],3)*(Math.round(Math.pow((y[0]-1),2)))))));
+                    isOkY = (y[0]*y[1]*y[2]*y[3]==y[0]*(y[0]+1)*(y[0]+2)*(y[0]+1)) && ((x[0]*x[1]*x[2]*x[3] == Math.round(Math.pow(x[0],3)*(Math.round(Math.pow((x[0]+1),2)))) || (x[0]*x[1]*x[2]*x[3] == Math.round(Math.pow(x[0],3)*(Math.round(Math.pow((x[0]-1),2)))))));
+                }
+            }
+        }
+        boolean isOk = isOkX || isOkY;
+        return isOk;
     }
 }

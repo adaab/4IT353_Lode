@@ -53,13 +53,13 @@ public Pane contentLoaderPane;
             e.printStackTrace();
         }
 
-        /*TODO this is just for testing purposes
-        ServerDto dto = new ServerDto();
+        //TODO this is just for testing purposes
+        /*ServerDto dto = new ServerDto();
         dto.id = "Pepa";
         dto.gameState = NEW;
         dto.gameId = 254;
         dto.opponentId = "XXX";
-        app.processResponse(dto);
-        */
+        app.processResponse(dto);*/
+
     }
 }

@@ -156,8 +156,7 @@ public class Client implements ClientListener {
             out.writeObject(msg);
             out.flush();
             System.out.println("FLUSHED");
-        }//}
-
+        }
     }
 
     public boolean isConnected(){ return open; }
