@@ -6,9 +6,8 @@ import logic.GameField.FieldState;
 import java.util.ArrayList;
 
 public class Game {
-    private static final String[] BOARD_LETTERS = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"};
+    public static final String[] BOARD_LETTERS = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"};
     private Integer gameId;
-    private ArrayList<GameField> fields;
     private Player playerA;
     private Player playerB;
     private Player currentlyPlaying;
@@ -75,7 +74,6 @@ public class Game {
     }
 
     public void startNewGame() {
-        initGameBoard();
         currentlyPlaying = playerA;
         this.currentGameState = GameState.NEW;
     }
@@ -97,16 +95,6 @@ public class Game {
             return playerA;
         } else {
             return null;
-        }
-    }
-
-    private void initGameBoard() {
-        fields = new ArrayList<>();
-
-        for (int i = 0 ; i < 16 ; i++){
-            for (int j = 1 ; j <= 12 ; j++){
-                this.fields.add(new GameField(BOARD_LETTERS[i], String.valueOf(j), FieldState.empty));
-            }
         }
     }
 
@@ -135,6 +123,7 @@ public class Game {
                     case PLAYING:
                         if (currentlyPlaying.getId().equals(messagingPlayer.getId())) {
                             handlePlayerShot(dto);
+                            currentlyPlaying = getOpponentForPlayer(currentlyPlaying);
                         }
                         //TODO  handle players turns
 
@@ -149,6 +138,7 @@ public class Game {
         if (field != null) {
             field.setFieldState(FieldState.shipHit);
         }
+        getOpponentForPlayer(currentlyPlaying).updatePlayerFields();
     }
 
     private GameField findOpponentShipPosition(String x, String y) {

@@ -42,13 +42,13 @@ public class CommunicationDtosService {
         dto.playerPoints = player.getPoints();
         dto.gameState = game.getCurrentGameState();
         dto.playerPoints = player.getPoints();
-        dto.playerFields = player.getPlayerFields();
+        dto.playerFields = player.getFields();
         dto.ships = player.getShips();
         Player opponent = game.getOpponentForPlayer(player);
         if (opponent != null) {
             dto.opponentId = opponent.getId();
             dto.opponentPoints = opponent.getPoints();
-            dto.opponentField = opponent.getPlayerFields();
+            dto.opponentField = opponent.getFields();
             dto.destroyedOpponentsShips = opponent.destroyedShips();
         }
         dto.shotResult = game.getLastShotResult();
@@ -58,4 +58,5 @@ public class CommunicationDtosService {
         }
         return dto;
     }
+
 }

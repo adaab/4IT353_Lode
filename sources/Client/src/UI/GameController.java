@@ -923,6 +923,7 @@ public class GameController implements Observer {
         this.app = app;
         app.register(this);
         update();
+        System.out.println("INIT");
     }
 
     public void prepareNewGame() {
@@ -1077,6 +1078,8 @@ public class GameController implements Observer {
         contentLoader.setVisible(true);
 
         ClientDto newGame = new ClientDto();
+        newGame.gameId = app.gameId;
+        newGame.id = app.player;
         newGame.playerReadyToPlay = true;
         newGame.playerShips = ships;
         try {
@@ -1096,6 +1099,7 @@ public class GameController implements Observer {
 
     public void updateGame() {
         //VIEW FIELD UPDATES
+        System.out.println("APP : " + app);
         for (GameField field : app.getPlayerField()) {
             if (field.getFieldState().equals(GameField.FieldState.ship)) {
                 for (Button btn : viewFieldButtons) {
@@ -1152,6 +1156,7 @@ public class GameController implements Observer {
     public void sendShot(String id){
         ClientDto shot = new ClientDto();
         shot.gameId = app.gameId;
+        shot.id = app.player;
         shot.shotX = id.substring(0,1);
         shot.shotY = id.substring(1);
         try {

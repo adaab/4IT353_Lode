@@ -13,8 +13,8 @@ public class Player {
     private String id;
     private Integer points;
     private List<Ship> ships;
+    private ArrayList<GameField> fields;
 
-    private ArrayList<GameField> playerFields;
     private ArrayList<GameField> foundOutOpponentFields;
     public ObjectOutputStream out;
 
@@ -42,8 +42,29 @@ public class Player {
         this.points = points;
     }
 
-    public ArrayList<GameField> getPlayerFields() {
-        return playerFields;
+    public ArrayList<GameField> getFields() {
+        return fields;
+    }
+
+    private void initPlayerFields() {
+        fields = new ArrayList<>();
+        for (int i = 0 ; i < 16 ; i++){
+            for (int j = 1 ; j <= 12 ; j++){
+                fields.add(new GameField(Game.BOARD_LETTERS[i], String.valueOf(j), GameField.FieldState.empty));
+            }
+        }
+    }
+
+    public void updatePlayerFields() {
+        for (GameField field : this.fields) {
+            for (Ship s : ships) {
+                for (GameField shipField : s.getPositions()) {
+                    if (field.equals(shipField)) {
+                        field.setFieldState(shipField.getFieldState());
+                    }
+                }
+            }
+        }
     }
 
     public ArrayList<GameField> getFoundOutOpponentFields() {
@@ -63,6 +84,7 @@ public class Player {
         this.ip = ip;
         this.port = port;
         this.out = out;
+        initPlayerFields();
     }
 
     public Boolean isAlive() {

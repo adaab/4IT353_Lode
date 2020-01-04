@@ -99,7 +99,7 @@ public class App implements Subject {
                     //TODO inicializace obrazovky "čekám"
                     break;
                 case NEW:
-                    this.gameId = gameId;
+                    this.gameId = dto.gameId;
                     this.gameState = dto.gameState;
                     this.player = dto.id;
                     //this.playerPoints = dto.playerPoints;
@@ -162,7 +162,6 @@ public class App implements Subject {
             loader.setLocation(getClass().getResource("/game.fxml"));
             VBox root = loader.load();
             GameController gameController = loader.getController();
-
             Scene scene = new Scene(root, 1040, 800);
             stage.setScene(scene);
             stage.setTitle("Battleship");
