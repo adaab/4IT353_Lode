@@ -73,7 +73,7 @@
                         <Image url="@icons/cruise.png" />
                      </image>
                   </ImageView>
-                  <Button fx:id="newGame" mnemonicParsing="false" text="Button" visible="false" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+                  <Button fx:id="newGame" onMouseClicked="#playNewGame" mnemonicParsing="false" text="Nová hra" visible="false" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
                </children>
                 </GridPane>
             <Label fx:id="loggedUser" layoutX="883.0" layoutY="37.0" styleClass="loggedUser" text="Uživatel" textAlignment="CENTER" />

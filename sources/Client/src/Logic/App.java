@@ -115,10 +115,16 @@ public class App implements Subject {
                         this.gameController.updateGame();
                     } else {
                         if (dto.gameState.equals(Game.GameState.WIN)) {
-                            //TODO inicializuje obrazovku konec a zobrazí výhru
+                            this.gameState = dto.gameState;
+                            this.playerPoints = dto.playerPoints;
+                            this.opponentPoints = dto.opponentPoints;
+                            getInfoScreen();
                         } else {
                             if (dto.gameState.equals(Game.GameState.LOSS)) {
-                                //TODO inicializuje obrazovku konec a zobrazí prohru
+                                this.gameState = dto.gameState;
+                                this.playerPoints = dto.playerPoints;
+                                this.opponentPoints = dto.opponentPoints;
+                                getInfoScreen();
                             }
                         }
                     }
@@ -138,8 +144,17 @@ public class App implements Subject {
         stage.setTitle("Battleship");
         scene.getStylesheets().add("styles.css");
         controller.inicializuj(this);
-        controller.waitForOtherPlayer();
+
+        if (gameState.equals(Game.GameState.WAITING_FOR_OTHER_PLAYER)) {
+            controller.waitForOtherPlayer();
+        } else {
+            if (gameState.equals(Game.GameState.WIN)) {
+                controller.youWon();
+            } else {
+                controller.youLost();
+            }
         }
+    }
 
         public void getGameScreen() throws IOException{
             FXMLLoader loader = new FXMLLoader();
@@ -162,5 +177,19 @@ public class App implements Subject {
 
     public ArrayList<GameField> getOpponentField() {
         return opponentField;
+    }
+
+    public void initNewGame() throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/home.fxml"));
+        VBox root = loader.load();
+        HomeController controller = loader.getController();
+
+        stage.setTitle("Battleship");
+        Scene scene = new Scene(root, 1040, 800);
+        stage.setScene(scene);
+        scene.getStylesheets().add("styles.css");
+
+        controller.inicializuj(this);
     }
 }
