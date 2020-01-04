@@ -109,7 +109,7 @@ public class Client implements ClientListener {
             dto.opponentPoints = 44;
             app.processResponse(dto);
         }
-
+        */
         if (app.gameState.equals(Game.GameState.NEW)) {
             ServerDto dto = new ServerDto();
             dto.gameState = Game.GameState.PLAYING;
@@ -150,13 +150,14 @@ public class Client implements ClientListener {
             dto.opponentField = opponentFields;
             dto.isMyTurn = true;
 
-            app.processResponse(dto);
-        } else {*/
+            app.processResponse(dto);/*
+        } else {
             if(open) {
             out.writeObject(msg);
             out.flush();
             System.out.println("FLUSHED");
-        }//}
+        }//}*/
+        }
 
     }
 
