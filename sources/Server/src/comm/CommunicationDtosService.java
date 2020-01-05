@@ -1,6 +1,7 @@
 package comm;
 
 import logic.Game;
+import logic.GameField;
 import logic.Player;
 
 import java.io.IOException;
@@ -28,6 +29,9 @@ public class CommunicationDtosService {
                 Player pB = game.getPlayerB();
                 if (pB.getId() != null) {
                     ServerDto dto = fillServerResponseForPlayer(game, pB);
+                    for (GameField field : dto.playerFields) {
+                        System.out.println("PLAYER FIELDS: " + field.getX() + " " + field.getY() + " " + field.getFieldState());
+                    }
                     pB.out.writeObject(dto);
                 }
             } catch (IOException e) {
@@ -40,9 +44,15 @@ public class CommunicationDtosService {
         ServerDto dto = new ServerDto();
         dto.id = player.getId();
         dto.playerPoints = player.getPoints();
-        dto.gameState = game.getCurrentGameState();
+        if (game.getCurrentGameState() == Game.GameState.NEW && player.readyToPlay() && !game.getOpponentForPlayer(player).readyToPlay()) {
+            dto.gameState = Game.GameState.WAITING_FOR_OTHER_PLAYER;
+        } else {
+            dto.gameState = game.getCurrentGameState();
+        }
         dto.playerPoints = player.getPoints();
+        System.out.println("A0 STATE DTO: " + player.getFields().get(0).getFieldState());
         dto.playerFields = player.getFields();
+        System.out.println("A0 STATE DTO: " + dto.playerFields.get(0).getFieldState());
         dto.ships = player.getShips();
         Player opponent = game.getOpponentForPlayer(player);
         if (opponent != null) {
@@ -53,7 +63,7 @@ public class CommunicationDtosService {
         }
         dto.shotResult = game.getLastShotResult();
         dto.gameId = game.getGameId();
-        if (game.getCurrentlyPlaying() != null) {
+        if (game.getCurrentGameState() == Game.GameState.PLAYING) {
             dto.isMyTurn = game.getCurrentlyPlaying().getId().equals(player.getId());
         }
         return dto;

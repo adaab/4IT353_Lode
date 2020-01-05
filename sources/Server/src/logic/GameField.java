@@ -1,6 +1,7 @@
 package logic;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class GameField implements Serializable {
     private String x;
@@ -55,5 +56,14 @@ public class GameField implements Serializable {
         GameField field = (GameField) o;
         // field comparison
         return (this.x.equals(field.getX()) && this.y.equals(field.getY()));
+    }
+
+    public static GameField getFieldFromArrayByPosition(List<GameField> list, String x, String y) {
+        for (GameField field : list) {
+            if (x.equals(field.getX()) && y.equals(field.getY())) {
+                return field;
+            }
+        }
+        return null;
     }
 }
