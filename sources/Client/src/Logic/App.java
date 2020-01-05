@@ -111,13 +111,21 @@ public class App implements Subject {
                     //TODO inicializuje novou hru - zadávání svých lodí
                     break;
                 case PLAYING:
+                    getGameScreen();
                     this.gameState = dto.gameState;
                     this.playerPoints = dto.playerPoints;
                     this.playerField = dto.playerFields;
                     this.opponentPoints = dto.opponentPoints;
                     this.opponentField = dto.opponentField;
+                    for (GameField field : dto.playerFields) {
+                        System.out.println("PLAYER FIELDS: " + field.getX() + " " + field.getY() + " " + field.getFieldState());
+                    }
+                    for (GameField field : dto.playerFields) {
+                        System.out.println("OPPONENT FIELDS: " + field.getX() + " " + field.getY() + " " + field.getFieldState());
+                    }
                     this.isMyTurn = dto.isMyTurn;
                     this.gameController.updateGame();
+                    this.gameController.setPlayingScene();
                     break;
                 case WIN:
                     this.gameState = dto.gameState;

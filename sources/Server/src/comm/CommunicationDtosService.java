@@ -1,6 +1,7 @@
 package comm;
 
 import logic.Game;
+import logic.GameField;
 import logic.Player;
 
 import java.io.IOException;
@@ -17,6 +18,11 @@ public class CommunicationDtosService {
                 Player pA = game.getPlayerA();
                 if (pA.getId() != null) {
                     ServerDto dto = fillServerResponseForPlayer(game, pA);
+                    if (dto.playerFields != null && dto.playerFields.get(0) != null) {
+                        System.out.println("SEND TO " + pA.getId() + dto.playerFields.get(0).getFieldState());
+                        //dto.playerFields.get(0).setFieldState(GameField.FieldState.ship);
+                    }
+                    pA.out.reset();
                     pA.out.writeObject(dto);
                 }
             } catch (IOException e) {
@@ -28,6 +34,11 @@ public class CommunicationDtosService {
                 Player pB = game.getPlayerB();
                 if (pB.getId() != null) {
                     ServerDto dto = fillServerResponseForPlayer(game, pB);
+                    if (dto.playerFields != null && dto.playerFields.get(0) != null) {
+                        System.out.println("SEND TO " + pB.getId() + dto.playerFields.get(0).getFieldState());
+                        //dto.playerFields.get(0).setFieldState(GameField.FieldState.ship);
+                    }
+                    pB.out.reset();
                     pB.out.writeObject(dto);
                 }
             } catch (IOException e) {
@@ -40,7 +51,11 @@ public class CommunicationDtosService {
         ServerDto dto = new ServerDto();
         dto.id = player.getId();
         dto.playerPoints = player.getPoints();
-        dto.gameState = game.getCurrentGameState();
+        if (game.getCurrentGameState() == Game.GameState.NEW && player.readyToPlay() && !game.getOpponentForPlayer(player).readyToPlay()) {
+            dto.gameState = Game.GameState.WAITING_FOR_OTHER_PLAYER;
+        } else {
+            dto.gameState = game.getCurrentGameState();
+        }
         dto.playerPoints = player.getPoints();
         dto.playerFields = player.getFields();
         dto.ships = player.getShips();
@@ -53,7 +68,7 @@ public class CommunicationDtosService {
         }
         dto.shotResult = game.getLastShotResult();
         dto.gameId = game.getGameId();
-        if (game.getCurrentlyPlaying() != null) {
+        if (game.getCurrentGameState() == Game.GameState.PLAYING) {
             dto.isMyTurn = game.getCurrentlyPlaying().getId().equals(player.getId());
         }
         return dto;

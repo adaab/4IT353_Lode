@@ -47,9 +47,10 @@ public class Player {
     }
 
     private void initPlayerFields() {
+        System.out.println("TTTT INIT");
         fields = new ArrayList<>();
         for (int i = 0 ; i < 16 ; i++){
-            for (int j = 1 ; j <= 12 ; j++){
+            for (int j = 0 ; j < 13 ; j++){
                 fields.add(new GameField(Game.BOARD_LETTERS[i], String.valueOf(j), GameField.FieldState.empty));
             }
         }
@@ -60,11 +61,13 @@ public class Player {
             for (Ship s : ships) {
                 for (GameField shipField : s.getPositions()) {
                     if (field.equals(shipField)) {
+                        System.out.println("updating fields " + field.getPosition() + " " + shipField.getFieldState());
                         field.setFieldState(shipField.getFieldState());
                     }
                 }
             }
         }
+        System.out.println("A0 STATE PLAYER: " + this.fields.get(0).getFieldState());
     }
 
     public ArrayList<GameField> getFoundOutOpponentFields() {
@@ -77,6 +80,7 @@ public class Player {
 
     public void setShips(List<Ship> ships) {
         this.ships = ships;
+        updatePlayerFields();
     }
 
     public Player(InetAddress ip, Integer port, ObjectOutputStream out) {
@@ -108,6 +112,7 @@ public class Player {
     }
 
     public Boolean readyToPlay() {
+
         return (ip != null && port != null && gameId != null && id != null && ships.size() > 0);
     }
 

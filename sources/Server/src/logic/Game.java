@@ -3,7 +3,9 @@ package logic;
 import comm.ClientDto;
 import comm.CommunicationDtosService;
 import logic.GameField.FieldState;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class Game {
     public static final String[] BOARD_LETTERS = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"};
@@ -99,6 +101,7 @@ public class Game {
     }
 
     public void informPlayers() {
+
         CommunicationDtosService.informPlayers(this);
     }
 
@@ -137,6 +140,7 @@ public class Game {
         GameField field = findOpponentShipPosition(dto.shotX, dto.shotY);
         if (field != null) {
             field.setFieldState(FieldState.shipHit);
+            System.out.println("SHIP HIT SET " + field.getPosition());
         }
         getOpponentForPlayer(currentlyPlaying).updatePlayerFields();
     }
@@ -145,12 +149,15 @@ public class Game {
         GameField field = null;
         Player opponent = getOpponentForPlayer(currentlyPlaying);
         for (Ship s : opponent.getShips()) {
-            for (GameField gameField : s.getPositions()) {
-                if (x.equals(gameField.getX()) && y.equals(gameField.getY())) {
-                    field = gameField;
-                }
+            field = GameField.getFieldFromArrayByPosition(new ArrayList<GameField>(s.getPositions()), x, y);
+            if (field != null) {
+                break;
             }
         }
         return field;
     }
+
+    /*public getFieldFromListByPostion() {
+
+    }*/
 }

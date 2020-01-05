@@ -1087,11 +1087,15 @@ public class GameController implements Observer {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        buttonsWithShips.forEach((btn) -> btn.setDisable(false));
+        buttonsWithShips.forEach((btn) -> btn.setStyle("-fx-background-color: white"));
+    }
+
+    public void setPlayingScene() {
         boatSelect.setVisible(false);
         viewField.setVisible(true);
         viewField.disabledProperty();
         opponentLabel.setVisible(true);
-        buttonsWithShips.forEach((btn) -> btn.setStyle("-fx-background-color: white"));
         playerLabel.setText("Tvoje lodě");
         opponentLabel.setText("Lodě protivníka");
         score.setVisible(true);
@@ -1099,8 +1103,8 @@ public class GameController implements Observer {
 
     public void updateGame() {
         //VIEW FIELD UPDATES
-        System.out.println("APP : " + app);
         for (GameField field : app.getPlayerField()) {
+            //System.out.println("PLAYER FIELDS: " + field.getX() + " " + field.getY() + " " + field.getFieldState());
             if (field.getFieldState().equals(GameField.FieldState.ship)) {
                 for (Button btn : viewFieldButtons) {
                     if (btn.getId().substring(1).equals(field.getPosition())) {
@@ -1125,6 +1129,7 @@ public class GameController implements Observer {
 
         //MAIN FIELD UPDATES
         for (GameField field : app.getOpponentField()) {
+            //System.out.println("OPPONENT FIELDS: " + field.getX() + " " + field.getY() + " " + field.getFieldState());
             if (field.getFieldState().equals(GameField.FieldState.missed)) {
                 for (Button btn : mainFieldButtons) {
                     if (btn.getId().equals(field.getPosition())) {
