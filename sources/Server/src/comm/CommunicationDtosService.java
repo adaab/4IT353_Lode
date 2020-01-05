@@ -18,6 +18,11 @@ public class CommunicationDtosService {
                 Player pA = game.getPlayerA();
                 if (pA.getId() != null) {
                     ServerDto dto = fillServerResponseForPlayer(game, pA);
+                    if (dto.playerFields != null && dto.playerFields.get(0) != null) {
+                        System.out.println("SEND TO " + pA.getId() + dto.playerFields.get(0).getFieldState());
+                        //dto.playerFields.get(0).setFieldState(GameField.FieldState.ship);
+                    }
+                    pA.out.reset();
                     pA.out.writeObject(dto);
                 }
             } catch (IOException e) {
@@ -29,9 +34,11 @@ public class CommunicationDtosService {
                 Player pB = game.getPlayerB();
                 if (pB.getId() != null) {
                     ServerDto dto = fillServerResponseForPlayer(game, pB);
-                    for (GameField field : dto.playerFields) {
-                        System.out.println("PLAYER FIELDS: " + field.getX() + " " + field.getY() + " " + field.getFieldState());
+                    if (dto.playerFields != null && dto.playerFields.get(0) != null) {
+                        System.out.println("SEND TO " + pB.getId() + dto.playerFields.get(0).getFieldState());
+                        //dto.playerFields.get(0).setFieldState(GameField.FieldState.ship);
                     }
+                    pB.out.reset();
                     pB.out.writeObject(dto);
                 }
             } catch (IOException e) {
@@ -50,9 +57,7 @@ public class CommunicationDtosService {
             dto.gameState = game.getCurrentGameState();
         }
         dto.playerPoints = player.getPoints();
-        System.out.println("A0 STATE DTO: " + player.getFields().get(0).getFieldState());
         dto.playerFields = player.getFields();
-        System.out.println("A0 STATE DTO: " + dto.playerFields.get(0).getFieldState());
         dto.ships = player.getShips();
         Player opponent = game.getOpponentForPlayer(player);
         if (opponent != null) {

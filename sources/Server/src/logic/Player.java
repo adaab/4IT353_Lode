@@ -51,7 +51,7 @@ public class Player {
         fields = new ArrayList<>();
         for (int i = 0 ; i < 16 ; i++){
             for (int j = 0 ; j < 13 ; j++){
-                fields.add(new GameField(Game.BOARD_LETTERS[i], String.valueOf(j), null));
+                fields.add(new GameField(Game.BOARD_LETTERS[i], String.valueOf(j), GameField.FieldState.empty));
             }
         }
     }

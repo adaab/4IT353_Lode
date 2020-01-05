@@ -3,6 +3,7 @@ package logic;
 import comm.ClientDto;
 import comm.CommunicationDtosService;
 import logic.GameField.FieldState;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,6 +101,7 @@ public class Game {
     }
 
     public void informPlayers() {
+
         CommunicationDtosService.informPlayers(this);
     }
 
