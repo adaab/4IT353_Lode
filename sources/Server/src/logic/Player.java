@@ -1,11 +1,15 @@
 package logic;
 
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Player assigned to one game, contains his ships and fields
+ *
+ * @author  chot2
+ */
 public class Player {
     public InetAddress ip;
     public Integer port;
@@ -15,7 +19,6 @@ public class Player {
     private List<Ship> ships;
     private ArrayList<GameField> fields;
 
-    private ArrayList<GameField> foundOutOpponentFields;
     public ObjectOutputStream out;
 
     public Integer getGameId() {
@@ -46,34 +49,6 @@ public class Player {
         return fields;
     }
 
-    private void initPlayerFields() {
-        System.out.println("TTTT INIT");
-        fields = new ArrayList<>();
-        for (int i = 0 ; i < 16 ; i++){
-            for (int j = 0 ; j < 13 ; j++){
-                fields.add(new GameField(Game.BOARD_LETTERS[i], String.valueOf(j), GameField.FieldState.empty));
-            }
-        }
-    }
-
-    public void updatePlayerFields() {
-        for (GameField field : this.fields) {
-            for (Ship s : ships) {
-                for (GameField shipField : s.getPositions()) {
-                    if (field.equals(shipField)) {
-                        System.out.println("updating fields " + field.getPosition() + " " + shipField.getFieldState());
-                        field.setFieldState(shipField.getFieldState());
-                    }
-                }
-            }
-        }
-        System.out.println("A0 STATE PLAYER: " + this.fields.get(0).getFieldState());
-    }
-
-    public ArrayList<GameField> getFoundOutOpponentFields() {
-        return foundOutOpponentFields;
-    }
-
     public List<Ship> getShips() {
         return ships;
     }
@@ -83,6 +58,13 @@ public class Player {
         updatePlayerFields();
     }
 
+    /**
+     * Constructor - initializes players board
+     *
+     * @param ip
+     * @param port
+     * @param out
+     */
     public Player(InetAddress ip, Integer port, ObjectOutputStream out) {
         ships = new ArrayList<>();
         this.ip = ip;
@@ -91,16 +73,62 @@ public class Player {
         initPlayerFields();
     }
 
+    /**
+     * Inits player game field x line A-P and y line 0 - 12
+     *
+     * @author  chot02
+     */
+    private void initPlayerFields() {
+        fields = new ArrayList<>();
+        for (int i = 0 ; i < 16 ; i++){
+            for (int j = 0 ; j < 13 ; j++){
+                fields.add(new GameField(Game.BOARD_LETTERS[i], String.valueOf(j), GameField.FieldState.empty));
+            }
+        }
+    }
+
+    /**
+     * Takes states from player ships fields and updates player fields on board accordingly
+     *
+     * @author  chot02
+     */
+    public void updatePlayerFields() {
+        for (GameField field : this.fields) {
+            for (Ship s : ships) {
+                for (GameField shipField : s.getPositions()) {
+                    if (field.equals(shipField)) {
+                        field.setFieldState(shipField.getFieldState());
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Checks whether any of player ship is still alive
+     *
+     * @author  chot02
+     *
+     * @return Boolean
+     */
     public Boolean isAlive() {
         Boolean alive = false;
         for (Ship s : ships) {
             if (s.getAlive()) {
                alive = true;
+               break;
             }
         }
         return alive;
     }
 
+    /**
+     * Returns all player ships that are not alive
+     *
+     * @author  chot02
+     *
+     * @return ArrayList<Ship> of player destroyed ships
+     */
     public ArrayList<Ship> destroyedShips() {
         ArrayList<Ship> result = new ArrayList<>();
         for (Ship s : ships) {
@@ -111,8 +139,14 @@ public class Player {
         return result;
     }
 
+    /**
+     * Checks whether player has all needed properties for playing set
+     *
+     * @author  chot02
+     *
+     * @return Boolean - true if player has all needed properties for playing set
+     */
     public Boolean readyToPlay() {
-
         return (ip != null && port != null && gameId != null && id != null && ships.size() > 0);
     }
 
@@ -120,6 +154,14 @@ public class Player {
         return this.ip + " " + port + " ";
     }
 
+    /**
+     * equals - true if id, ip and port of players are equal
+     *
+     * @author  chot02
+     *
+     * @param obj
+     * @return Boolean - true if id, ip and port of players are equal
+     */
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
