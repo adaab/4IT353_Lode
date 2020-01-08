@@ -138,7 +138,6 @@ public class TCPServer implements ServerListener{
         } else {
             games.get(lastInitiatedGameId).setPlayerB(client);
             System.out.println("player b assigned to a game: " + lastInitiatedGameId);
-            //TODO maybe start game
         }
         client.setGameId(lastInitiatedGameId);
         sendInitServerDto(client, lastInitiatedGameId);

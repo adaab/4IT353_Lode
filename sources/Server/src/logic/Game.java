@@ -5,8 +5,12 @@ import comm.CommunicationDtosService;
 import logic.GameField.FieldState;
 
 import java.util.ArrayList;
-import java.util.List;
 
+/**
+ * Game - contains logic for playing the game, also processes responses from client
+ *
+ * @author  chot2
+ */
 public class Game {
     public static final String[] BOARD_LETTERS = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"};
     private Integer gameId;
@@ -70,16 +74,35 @@ public class Game {
         return lastShotResult;
     }
 
+    /**
+     * Constructor - sets gameId and set currentGameState to INITIALIZED
+     *
+     * @param gameId
+     *
+     * @author  chot2
+     */
     public Game(Integer gameId) {
         this.gameId = gameId;
         this.currentGameState = GameState.INITIALIZED;
     }
 
+    /**
+     * sets starting player to playerA (the one that connected first) and sets currentGameState to NEW
+     *
+     * @author  chot2
+     */
     public void startNewGame() {
         currentlyPlaying = playerA;
         this.currentGameState = GameState.NEW;
     }
 
+    /**
+     * returns Player that is currently not on turn
+     *
+     * @author  chot2
+     *
+     * @return Player
+     */
     public Player getCurrentlyNotPlayingPlayer() {
         if (currentlyPlaying.getId().equals(playerA.getId())) {
             return playerB;
@@ -88,9 +111,15 @@ public class Game {
         }
     }
 
+    /**
+     * for provided player, returns his opponent
+     *
+     * @author  chot02
+     *
+     * @param p
+     * @return Player
+     */
     public Player getOpponentForPlayer(Player p) {
-        System.out.println("Player" + p);
-        System.out.println("p.getId()" + p.getId());
         if (p.getId().equals(playerA.getId())) {
             return playerB;
         } else if (p.getId().equals(playerB.getId())) {
@@ -100,11 +129,27 @@ public class Game {
         }
     }
 
+    /**
+     * sends responses from game to both players
+     *
+     * @author  chot2
+     */
     public void informPlayers() {
-
         CommunicationDtosService.informPlayers(this);
     }
 
+    /**
+     * processes message from player -
+     *      if his id is not set - sets it
+     *      if game state is NEW (setting ships) sets his ships according to ships from message
+     *      if game state is PLAYING - handles his shot on field XY
+     * informs both players about game after processing message
+     *
+     * @author  chot2
+     *
+     * @param   p Player from which message came
+     * @param   dto message in form of ClientDto
+     */
     public void processClientMessage(Player p, ClientDto dto) {
         Player messagingPlayer = null;
         if (p.equals(playerA)) {
@@ -128,23 +173,37 @@ public class Game {
                             handlePlayerShot(dto);
                             currentlyPlaying = getOpponentForPlayer(currentlyPlaying);
                         }
-                        //TODO  handle players turns
-
                 }
             }
             informPlayers();
         }
     }
 
+    /**
+     * Handles player shot from message - if opponent has ship on that position sets that opponent field to shipHit and
+     * updates opponents fields
+     *
+     * @author  chot2
+     *
+     * @param dto message from currently playing player
+     */
     private void handlePlayerShot(ClientDto dto) {
         GameField field = findOpponentShipPosition(dto.shotX, dto.shotY);
         if (field != null) {
             field.setFieldState(FieldState.shipHit);
-            System.out.println("SHIP HIT SET " + field.getPosition());
         }
         getOpponentForPlayer(currentlyPlaying).updatePlayerFields();
     }
 
+    /**
+     * finds GameField if opponent of currently playing player has ship on it
+     *
+     * @author  chot2
+     *
+     * @param x x position of field
+     * @param y y position of field
+     * @return GameField - returns null if opponent has no ship on provided coordination
+     */
     private GameField findOpponentShipPosition(String x, String y) {
         GameField field = null;
         Player opponent = getOpponentForPlayer(currentlyPlaying);
@@ -157,7 +216,4 @@ public class Game {
         return field;
     }
 
-    /*public getFieldFromListByPostion() {
-
-    }*/
 }
