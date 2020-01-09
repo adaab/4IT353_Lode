@@ -21,38 +21,67 @@ public class Player {
 
     public ObjectOutputStream out;
 
+    /**
+     * @return game id of game to which is player assigned
+     */
     public Integer getGameId() {
         return gameId;
     }
 
+    /**
+     * @param gameId id of game to which is player assigned
+     */
     public void setGameId(Integer gameId) {
         this.gameId = gameId;
     }
 
+    /**
+     * @return player's unique name
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * @param id player's unique name
+     */
     public void setId(String id) {
         this.id = id;
     }
 
+    /**
+     * @return player's score
+     */
     public Integer getPoints() {
         return points;
     }
 
+    /**
+     * @param points player's score
+     */
     public void setPoints(Integer points) {
         this.points = points;
     }
 
+    /**
+     * @return player's board
+     */
     public ArrayList<GameField> getFields() {
         return fields;
     }
 
+    /**
+     * @return player's ships
+     */
     public List<Ship> getShips() {
         return ships;
     }
 
+    /**
+     * Sets player's ships and updates it's game board
+     *
+     * @param ships player's ships
+     */
     public void setShips(List<Ship> ships) {
         this.ships = ships;
         updatePlayerFields();
