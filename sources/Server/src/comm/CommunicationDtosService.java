@@ -66,7 +66,6 @@ public class CommunicationDtosService {
             dto.opponentField = opponent.getFields();
             dto.destroyedOpponentsShips = opponent.destroyedShips();
         }
-        dto.shotResult = game.getLastShotResult();
         dto.gameId = game.getGameId();
         if (game.getCurrentGameState() == Game.GameState.PLAYING) {
             dto.isMyTurn = game.getCurrentlyPlaying().getId().equals(player.getId());

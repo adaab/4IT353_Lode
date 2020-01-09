@@ -19,7 +19,6 @@ public class Game {
     private Player currentlyPlaying;
     private Boolean isGameRunning;
 
-    private Boolean lastShotResult;
     public enum GameState {
         INITIALIZED,
         WAITING_FOR_OTHER_PLAYER,
@@ -30,48 +29,71 @@ public class Game {
     }
     private GameState currentGameState;
 
+    /**
+     * @return game id (integer)
+     */
     public Integer getGameId() {
         return gameId;
     }
 
+    /**
+     * @param gameId
+     */
     public void setGameId(Integer gameId) {
         this.gameId = gameId;
     }
 
+    /**
+     * @return first player of game
+     */
     public Player getPlayerA() {
         return playerA;
     }
 
+    /**
+     * @param playerA
+     */
     public void setPlayerA(Player playerA) {
         this.playerA = playerA;
         this.playerA.setGameId(this.gameId);
         this.currentGameState = GameState.WAITING_FOR_OTHER_PLAYER;
     }
 
+    /**
+     * @return second player of game
+     */
     public Player getPlayerB() {
         return playerB;
     }
 
+    /**
+     * @param playerB
+     */
     public void setPlayerB(Player playerB) {
         this.playerB = playerB;
         this.playerB.setGameId(this.gameId);
         startNewGame();
     }
 
+    /**
+     * @return player that is currently on turn
+     */
     public Player getCurrentlyPlaying() {
         return currentlyPlaying;
     }
 
+    /**
+     * @param currentlyPlaying
+     */
     public void setCurrentlyPlaying(Player currentlyPlaying) {
         this.currentlyPlaying = currentlyPlaying;
     }
 
+    /**
+     * @return state in which game currently is (enum Game.GameState)
+     */
     public GameState getCurrentGameState() {
         return currentGameState;
-    }
-
-    public Boolean getLastShotResult() {
-        return lastShotResult;
     }
 
     /**
@@ -188,9 +210,15 @@ public class Game {
      * @param dto message from currently playing player
      */
     private void handlePlayerShot(ClientDto dto) {
-        GameField field = findOpponentShipPosition(dto.shotX, dto.shotY);
-        if (field != null) {
-            field.setFieldState(FieldState.shipHit);
+        GameField fieldWithOpponentShip = findOpponentShipPosition(dto.shotX, dto.shotY);
+        if (fieldWithOpponentShip != null) {
+            fieldWithOpponentShip.setFieldState(FieldState.shipHit);
+            currentlyPlaying.setPoints(currentlyPlaying.getPoints() + 10);
+        } else {
+            GameField playerField = GameField.getFieldFromArrayByPosition(getOpponentForPlayer(currentlyPlaying).getFields(),dto.shotX, dto.shotY);
+            if (playerField != null) {
+                playerField.setFieldState(FieldState.missed);
+            }
         }
         getOpponentForPlayer(currentlyPlaying).updatePlayerFields();
     }
