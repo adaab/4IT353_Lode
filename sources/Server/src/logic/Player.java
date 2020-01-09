@@ -99,6 +99,7 @@ public class Player {
         this.ip = ip;
         this.port = port;
         this.out = out;
+        this.points = 0;
         initPlayerFields();
     }
 

@@ -210,9 +210,15 @@ public class Game {
      * @param dto message from currently playing player
      */
     private void handlePlayerShot(ClientDto dto) {
-        GameField field = findOpponentShipPosition(dto.shotX, dto.shotY);
-        if (field != null) {
-            field.setFieldState(FieldState.shipHit);
+        GameField fieldWithOpponentShip = findOpponentShipPosition(dto.shotX, dto.shotY);
+        if (fieldWithOpponentShip != null) {
+            fieldWithOpponentShip.setFieldState(FieldState.shipHit);
+            currentlyPlaying.setPoints(currentlyPlaying.getPoints() + 10);
+        } else {
+            GameField playerField = GameField.getFieldFromArrayByPosition(getOpponentForPlayer(currentlyPlaying).getFields(),dto.shotX, dto.shotY);
+            if (playerField != null) {
+                playerField.setFieldState(FieldState.missed);
+            }
         }
         getOpponentForPlayer(currentlyPlaying).updatePlayerFields();
     }
