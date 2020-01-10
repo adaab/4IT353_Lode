@@ -8,9 +8,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Dto used for sending information server client to client
+ */
 public class ServerDto implements Serializable {
     public String id;
-    public Boolean shotResult; //not needed? server updates gameboard (arraylist of gamefields according to the hit result?
     public Integer playerPoints;
     public Game.GameState gameState;
     public ArrayList<GameField> playerFields;

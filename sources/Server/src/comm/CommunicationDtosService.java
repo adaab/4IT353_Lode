@@ -7,6 +7,8 @@ import logic.Player;
 import java.io.IOException;
 
 /**
+ * Service that constructs and sends server response to players
+ *
  * @author Tomas.Chour - Aspectworks
  * @date 2019-12-02
  */
