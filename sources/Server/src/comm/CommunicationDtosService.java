@@ -67,7 +67,6 @@ public class CommunicationDtosService {
             dto.opponentId = opponent.getId();
             dto.opponentPoints = opponent.getPoints();
             dto.opponentField = opponent.getFields();
-            dto.destroyedOpponentsShips = opponent.destroyedShips();
         }
         dto.gameId = game.getGameId();
         if (game.getCurrentGameState() == Game.GameState.PLAYING) {
