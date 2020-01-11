@@ -2,6 +2,9 @@ package comm;
 
 import logic.Game;
 import logic.Player;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 import java.io.*;
 import java.net.*;
@@ -15,6 +18,7 @@ import java.util.Random;
  * @author chot02
  */
 public class TCPServer implements ServerListener{
+    static final Logger LOG = LoggerFactory.getLogger(TCPServer.class);
     private int port;
     private boolean open = true;
     private ServerSocket ss;
@@ -63,7 +67,7 @@ public class TCPServer implements ServerListener{
                                 }
                             });
                             clientThread.setDaemon(true);
-                            clientThread.setName("Client "+s.getInetAddress().toString());
+                            clientThread.setName("Client "+s.getInetAddress().toString() + " " + s.getPort());
                             clientThread.start();
                         }catch(SocketException e){  System.out.println("EXCEPT " + e.getMessage());
                         }catch(IOException e){ e.printStackTrace(); }
@@ -139,10 +143,10 @@ public class TCPServer implements ServerListener{
             newGame.setPlayerA(client);
             games.put(nextGameId, newGame);
             lastInitiatedGameId = nextGameId;
-            System.out.println("started new game " + lastInitiatedGameId);
+            LOG.info("started new game " + lastInitiatedGameId);
         } else {
             games.get(lastInitiatedGameId).setPlayerB(client);
-            System.out.println("player b assigned to a game: " + lastInitiatedGameId);
+            LOG.error("player b assigned to a game: " + lastInitiatedGameId);
         }
         client.setGameId(lastInitiatedGameId);
         sendInitServerDto(client, lastInitiatedGameId);
