@@ -173,21 +173,21 @@ public class App implements Subject {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/info.fxml"));
         VBox root = loader.load();
-        InfoController controller = loader.getController();
+        InfoController infoController = loader.getController();
 
         Scene scene = new Scene(root, 1040, 800);
         stage.setScene(scene);
         stage.setTitle("Battleship");
         scene.getStylesheets().add("styles.css");
-        controller.inicializuj(this);
+        infoController.inicializuj(this);
 
         if (gameState.equals(Game.GameState.WAITING_FOR_OTHER_PLAYER)) {
-            controller.waitForOtherPlayer();
+            infoController.waitForOtherPlayer();
         } else {
             if (gameState.equals(Game.GameState.WIN)) {
-                controller.youWon();
+                infoController.youWon();
             } else {
-                controller.youLost();
+                infoController.youLost();
             }
         }
         this.infoController = infoController;

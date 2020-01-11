@@ -12,51 +12,40 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.testfx.framework.junit.ApplicationTest;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
-public class AppTest {
+public class AppTest extends ApplicationTest {
     private App app;
     private ServerDto dto;
-    private static Stage stage;
-    private static HomeController controller;
+    private Stage stage;
+    private HomeController controller;
 
-    @BeforeClass
-    public static void prepareToolikt() {
-        Platform.startup(new Runnable() {
-            @Override
-            public void run() {
-                stage = new Stage();
-                FXMLLoader loader = new FXMLLoader();
-                loader.setLocation(getClass().getResource("/home.fxml"));
-                VBox root = null;
-                try {
-                    root = loader.load();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                controller = loader.getController();
+    @Override
+    public void start (Stage stage) throws Exception {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/home.fxml"));
+        VBox root = loader.load();
+        HomeController controller = loader.getController();
 
-                stage.setTitle("Battleship");
-                Scene scene = new Scene(root, 1040, 800);
-                stage.setScene(scene);
-                scene.getStylesheets().add("styles.css");
-                stage.show();
-            }
-        });
+        stage.setTitle("Battleship");
+        Scene scene = new Scene(root, 1040, 800);
+        stage.setScene(scene);
+        scene.getStylesheets().add("styles.css");
+        stage.show();
+
+        app = new App(stage, controller);
+        controller.inicializuj(app);
+        this.stage = stage;
     }
 
     @Before
     public void prepare(){
-
-        app = new App(stage, controller);
-        controller.inicializuj(app);
         dto = new ServerDto();
-        app.stage = stage;
-        app.controller = controller;
     }
 
     @Test
