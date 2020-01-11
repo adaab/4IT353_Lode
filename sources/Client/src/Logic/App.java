@@ -45,7 +45,6 @@ public class App implements Subject {
     public HomeController controller;
     public GameController gameController;
     public Integer gameId;
-    public Thread main;
     public Boolean isMyTurn;
     public InfoController infoController;
 
@@ -55,7 +54,7 @@ public class App implements Subject {
         this.controller = controller;
 
         Observers = new HashSet<>();
-        server = new Client("localhost", 8889, this, main);
+        server = new Client("localhost", 8889, this);
     }
 
     @Override
@@ -96,10 +95,11 @@ public class App implements Subject {
      * metoda zpracuje příchozí dto ze serveru, aktualizuje potřebné datové atributy a spustí/aktualizuje potřebnou obrazovku
      *
      * @param dto
-     
+
      */
     public void processResponse(ServerDto dto) throws IOException {
         if (dto.error != null) {
+            System.out.println("TTTT ERRROR  " + dto.error.descr);
         } else {
             switch (dto.gameState) {
                 case INITIALIZED:
@@ -160,7 +160,7 @@ public class App implements Subject {
     /**
      * metoda inicializuje Info screen - obrazovku zobrazující se v případě stavů "Waiting for other player", "win" nebo "loss"
      *
-     
+
      */
     public void getInfoScreen() throws IOException {
         FXMLLoader loader = new FXMLLoader();
@@ -189,7 +189,7 @@ public class App implements Subject {
     /**
      * metoda inicializuje Game screen - obrazovku zobrazující se v případě stavů "Waiting for other player", "win" nebo "loss"
      *
-     
+
      */
         public void getGameScreen() throws IOException{
             FXMLLoader loader = new FXMLLoader();
@@ -216,7 +216,7 @@ public class App implements Subject {
     /**
      * metoda inicializuje novou hru - vrací na přihlašovací obrazovku
      *
-     
+
      */
     public void initNewGame() throws IOException {
         FXMLLoader loader = new FXMLLoader();
@@ -231,4 +231,5 @@ public class App implements Subject {
 
         controller.inicializuj(this);
     }
+
 }

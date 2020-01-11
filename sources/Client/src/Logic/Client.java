@@ -32,10 +32,8 @@ public class Client implements ClientListener {
     private ObjectOutputStream out;
     private boolean open = true;
     private App app;
-    private Thread main;
-    public Client(String ip, int port, App app, Thread main){
+    public Client(String ip, int port, App app){
         this.app = app;
-        this.main = main;
         try{
             socket=new Socket(ip, port);
             out = new ObjectOutputStream(socket.getOutputStream());

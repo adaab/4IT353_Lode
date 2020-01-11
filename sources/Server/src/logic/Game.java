@@ -2,6 +2,7 @@ package logic;
 
 import comm.ClientDto;
 import comm.CommunicationDtosService;
+import comm.Error;
 import logic.GameField.FieldState;
 
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 /**
  * Game - contains logic for playing the game, also processes responses from client
  *
- * @author  chot2
+ * @author chot2
  */
 public class Game {
     public static final String[] BOARD_LETTERS = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"};
@@ -28,6 +29,7 @@ public class Game {
         WIN,
         LOSS
     }
+
     private GameState currentGameState;
 
     /**
@@ -108,8 +110,7 @@ public class Game {
      * Constructor - sets gameId and set currentGameState to INITIALIZED
      *
      * @param gameId
-     *
-     * @author  chot2
+     * @author chot2
      */
     public Game(Integer gameId) {
         this.gameId = gameId;
@@ -120,7 +121,7 @@ public class Game {
     /**
      * sets starting player to playerA (the one that connected first) and sets currentGameState to NEW
      *
-     * @author  chot2
+     * @author chot2
      */
     public void startNewGame() {
         currentlyPlaying = playerA;
@@ -130,9 +131,8 @@ public class Game {
     /**
      * returns Player that is currently not on turn
      *
-     * @author  chot2
-     *
      * @return Player
+     * @author chot2
      */
     public Player getCurrentlyNotPlayingPlayer() {
         if (currentlyPlaying.getId().equals(playerA.getId())) {
@@ -145,15 +145,14 @@ public class Game {
     /**
      * for provided player, returns his opponent
      *
-     * @author  chot02
-     *
      * @param p
      * @return Player
+     * @author chot02
      */
     public Player getOpponentForPlayer(Player p) {
-        if (p.getId().equals(playerA.getId())) {
+        if (p.equals(playerA)) {
             return playerB;
-        } else if (p.getId().equals(playerB.getId())) {
+        } else if (p.equals(playerB)) {
             return playerA;
         } else {
             return null;
@@ -163,7 +162,7 @@ public class Game {
     /**
      * sends responses from game to both players
      *
-     * @author  chot2
+     * @author chot2
      */
     public void informPlayers() {
         CommunicationDtosService.informPlayers(this);
@@ -171,26 +170,27 @@ public class Game {
 
     /**
      * processes message from player -
-     *      if his id is not set - sets it
-     *      if game state is NEW (setting ships) sets his ships according to ships from message
-     *      if game state is PLAYING - handles his shot on field XY
+     * if his id is not set - sets it
+     * if game state is NEW (setting ships) sets his ships according to ships from message
+     * if game state is PLAYING - handles his shot on field XY
      * informs both players about game after processing message
      *
-     * @author  chot2
-     *
-     * @param   p Player from which message came
-     * @param   dto message in form of ClientDto
+     * @param p   Player from which message came
+     * @param dto message in form of ClientDto
+     * @author chot2
      */
     public void processClientMessage(Player p, ClientDto dto) {
         Player messagingPlayer = null;
         if (p.equals(playerA)) {
+            System.out.println("TTTT EQUALS A");
             messagingPlayer = playerA;
         } else if (p.equals(playerB)) {
+            System.out.println("TTTT EQUALS B");
             messagingPlayer = playerB;
         }
         if (messagingPlayer != null) {
             if (messagingPlayer.getId() == null) {
-                messagingPlayer.setId(dto.id);
+                setPlayerId(p, dto);
             } else {
                 switch (this.currentGameState) {
                     case NEW:
@@ -206,17 +206,16 @@ public class Game {
                         }
                 }
             }
-            informPlayers();
         }
+        informPlayers();
     }
 
     /**
      * Handles player shot from message - if opponent has ship on that position sets that opponent field to shipHit and
      * updates opponents fields
      *
-     * @author  chot2
-     *
      * @param dto message from currently playing player
+     * @author chot2
      */
     private void handlePlayerShot(ClientDto dto) {
         GameField fieldWithOpponentShip = findOpponentShipPosition(dto.shotX, dto.shotY);
@@ -225,7 +224,7 @@ public class Game {
             currentlyPlaying.setPoints(currentlyPlaying.getPoints() + 10);
 
         } else {
-            GameField playerField = GameField.getFieldFromArrayByPosition(getOpponentForPlayer(currentlyPlaying).getFields(),dto.shotX, dto.shotY);
+            GameField playerField = GameField.getFieldFromArrayByPosition(getOpponentForPlayer(currentlyPlaying).getFields(), dto.shotX, dto.shotY);
             if (playerField != null) {
                 playerField.setFieldState(FieldState.missed);
             }
@@ -237,11 +236,10 @@ public class Game {
     /**
      * finds GameField if opponent of currently playing player has ship on it
      *
-     * @author  chot2
-     *
      * @param x x position of field
      * @param y y position of field
      * @return GameField - returns null if opponent has no ship on provided coordination
+     * @author chot2
      */
     private GameField findOpponentShipPosition(String x, String y) {
         GameField field = null;
@@ -255,8 +253,36 @@ public class Game {
         return field;
     }
 
+    /**
+     * sets game running property to false if not currently playing player lost all ships
+     *
+     * @author chot02
+     */
     private void checkGameOver() {
         isGameRunning = getOpponentForPlayer(currentlyPlaying).isAlive();
+    }
+
+    /**
+     * sets player id if player with this id doesnt already exists in game, if so, adds error to player
+     *
+     * @param player messaging player
+     * @param dto data from client
+     */
+    private void setPlayerId(Player player, ClientDto dto) {
+        System.out.println("TTTTT SETTING ID  ");
+        if (player.getId() == null) {
+            if (playerB == null || getOpponentForPlayer(player) == null || getOpponentForPlayer(player).getId() == null
+                    || !getOpponentForPlayer(player).getId().equals(dto.id)) {
+                System.out.println("TTTTT IDK  " + playerB + "   " + getOpponentForPlayer(player));
+                if (getOpponentForPlayer(player) != null) {
+                    System.out.println("TTTTT IDK  " + getOpponentForPlayer(player).getId().equals(dto.id));
+                }
+                player.setId(dto.id);
+            } else {
+                System.out.println("ERROR SET  ");
+                player.error = new Error(Error.Code.userExists, "User with this Id is already registered into the game.");
+            }
+        }
     }
 
 }

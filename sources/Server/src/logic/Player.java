@@ -1,5 +1,7 @@
 package logic;
 
+import comm.Error;
+
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.util.ArrayList;
@@ -13,6 +15,7 @@ import java.util.List;
 public class Player {
     public InetAddress ip;
     public Integer port;
+    public Error error;
     private Integer gameId;
     private String id;
     private Integer points;
@@ -84,6 +87,7 @@ public class Player {
      */
     public void setShips(List<Ship> ships) {
         this.ships = ships;
+        //System.out.println("TTTTT SETTTING SHIPS " + id + "   " + ships.size());
         updatePlayerFields();
     }
 
@@ -177,6 +181,7 @@ public class Player {
      * @return Boolean - true if player has all needed properties for playing set
      */
     public Boolean readyToPlay() {
+        System.out.println("READY TO PLAY" + ip + " " + port + " " + gameId + " " + id + " " + ships.size());
         return (ip != null && port != null && gameId != null && id != null && ships.size() > 0);
     }
 
@@ -199,7 +204,7 @@ public class Player {
             return false;
         } else if (obj instanceof Player) {
             Player p = (Player) obj;
-            if ((id != null && id.equals(p.getId())) || (ip.equals(p.ip) && port.equals(p.port))) {
+            if (ip.equals(p.ip) && port.equals(p.port)) {
                 return true;
             }
         }
