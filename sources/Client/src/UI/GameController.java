@@ -1313,4 +1313,8 @@ public class GameController implements Observer {
         boolean isOk = isOkX || isOkY;
         return isOk;
     }
+
+    public void handleError() {
+        instructions.setText("Unexpected error: "+app.error.descr);
+    }
 }

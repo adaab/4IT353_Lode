@@ -105,14 +105,8 @@ public class App implements Subject {
             if(error.type.equals(Error.Code.userExists)){
                 controller.handleUserExists();
             } else {
-                switch (error.type){
-                    case fieldNotExists:
-                        break;
-                    case fieldAlreadyHit:
-                        break;
+                gameController.handleError();
                 }
-            }
-
         } else {
             switch (dto.gameState) {
                 case INITIALIZED:

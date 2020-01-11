@@ -88,6 +88,9 @@ public Label instructions;
     }
 
     public void handleUserExists() {
+        contentLoaderPane.setVisible(false);
+        name.setDisable(false);
+        vstoupit.setDisable(false);
         instructions.setText("Uživatel se zadaným jménem již existuje, prosím zvolte jiné.");
         instructions.setStyle("color: red;");
         instructions.setVisible(true);

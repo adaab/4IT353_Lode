@@ -28,7 +28,6 @@ import static org.junit.Assert.*;
 public class GameControllerTest extends ApplicationTest {
     private App app;
     private Stage stage;
-    private FxRobot robot = new FxRobot();
 
     @Override
     public void start (Stage stage) throws Exception{
