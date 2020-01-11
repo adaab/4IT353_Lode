@@ -24,6 +24,8 @@ public TextField name;
 public ProgressIndicator contentLoader;
 @FXML
 public Pane contentLoaderPane;
+@FXML
+public Label instructions;
 
     private App app;
 
@@ -83,5 +85,11 @@ public Pane contentLoaderPane;
         dto.opponentId = "XXX";
         app.processResponse(dto);*/
 
+    }
+
+    public void handleUserExists() {
+        instructions.setText("Uživatel se zadaným jménem již existuje, prosím zvolte jiné.");
+        instructions.setStyle("color: red;");
+        instructions.setVisible(true);
     }
 }

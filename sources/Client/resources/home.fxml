@@ -85,9 +85,11 @@
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
                         <Button fx:id="vstoupit" mnemonicParsing="false" onMouseClicked="#logIn" text="Vstoupit" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                        <Label styleClass="instructions" text="Label" visible="false" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
                      </children>
                   </GridPane>
                </children>

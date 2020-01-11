@@ -5,6 +5,7 @@ import Logic.Subject;
 import UI.GameController;
 import UI.HomeController;
 import UI.InfoController;
+import comm.Error;
 import comm.ServerDto;
 import logic.Game;
 import javafx.fxml.FXMLLoader;
@@ -47,7 +48,7 @@ public class App implements Subject {
     public Integer gameId;
     public Boolean isMyTurn;
     public InfoController infoController;
-
+    public Error error;
 
     public App(Stage stage, HomeController controller) {
         this.stage = stage;
@@ -99,7 +100,19 @@ public class App implements Subject {
      */
     public void processResponse(ServerDto dto) throws IOException {
         if (dto.error != null) {
-            System.out.println("TTTT ERRROR  " + dto.error.descr);
+            this.error = dto.error;
+            System.out.println("TTTT ERRROR  " + error.descr);
+            if(error.type.equals(Error.Code.userExists)){
+                controller.handleUserExists();
+            } else {
+                switch (error.type){
+                    case fieldNotExists:
+                        break;
+                    case fieldAlreadyHit:
+                        break;
+                }
+            }
+
         } else {
             switch (dto.gameState) {
                 case INITIALIZED:
