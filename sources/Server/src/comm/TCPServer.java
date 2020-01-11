@@ -33,6 +33,7 @@ public class TCPServer implements ServerListener{
             else this.port=port;
             Thread serverThread = new Thread(new Runnable(){
                 public void run(){
+                    LOG.info("Server start");
                     while(open){
                         try{
                             @SuppressWarnings("resource")final Socket s = ss.accept();
@@ -69,8 +70,8 @@ public class TCPServer implements ServerListener{
                             clientThread.setDaemon(true);
                             clientThread.setName("Client "+s.getInetAddress().toString() + " " + s.getPort());
                             clientThread.start();
-                        }catch(SocketException e){  System.out.println("EXCEPT " + e.getMessage());
-                        }catch(IOException e){ e.printStackTrace(); }
+                        }catch(SocketException e){  LOG.error("EXCEPT " + e.getMessage());
+                        }catch(IOException e){ LOG.error("EXCEPT " + e.getMessage()); }
                     }
                 }
             });
@@ -115,25 +116,24 @@ public class TCPServer implements ServerListener{
 
     @Override
     public void clientConnected(Player client, ObjectOutputStream out) {
-        System.out.println("CLIENT " + client + " connected");
+        LOG.info("Client " + client + " connected");
         handlePlayerSplitIntoGames(client);
     }
 
     @Override
     public void clientDisconnected(Player client) {
-        System.out.println("CLIENT " + client + " disconnected");
+        LOG.info("Client " + client + " disconnected");
     }
 
     @Override
     public void recievedInput(Player client, Object msg) {
         ClientDto dto = (ClientDto) msg;
-        System.out.println("DTO " + client + " msg: " + dto.id);
         games.get(dto.gameId).processClientMessage(client, dto);
     }
 
     @Override
     public void serverClosed() {
-        System.out.println("SERVER CLOSED");
+        LOG.info("Server closed");
     }
 
     private void handlePlayerSplitIntoGames(Player client) {
@@ -143,14 +143,13 @@ public class TCPServer implements ServerListener{
             newGame.setPlayerA(client);
             games.put(nextGameId, newGame);
             lastInitiatedGameId = nextGameId;
-            LOG.info("started new game " + lastInitiatedGameId);
+            LOG.info("Started new game " + lastInitiatedGameId);
         } else {
             games.get(lastInitiatedGameId).setPlayerB(client);
-            LOG.error("player b assigned to a game: " + lastInitiatedGameId);
         }
         client.setGameId(lastInitiatedGameId);
+        LOG.info("Player " + client.toString() + " assigned to game: " + lastInitiatedGameId);
         sendInitServerDto(client, lastInitiatedGameId);
-        System.out.println("PLAYER: " + client);
     }
 
     private Integer generateNextGameId() {
