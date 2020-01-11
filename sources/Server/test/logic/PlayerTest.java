@@ -1,3 +1,5 @@
+package logic;
+
 import logic.GameField;
 import logic.Player;
 import logic.Ship;

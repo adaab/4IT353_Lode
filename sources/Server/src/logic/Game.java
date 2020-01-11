@@ -274,9 +274,6 @@ public class Game {
             if (playerB == null || getOpponentForPlayer(player) == null || getOpponentForPlayer(player).getId() == null
                     || !getOpponentForPlayer(player).getId().equals(dto.id)) {
                 System.out.println("TTTTT IDK  " + playerB + "   " + getOpponentForPlayer(player));
-                if (getOpponentForPlayer(player) != null) {
-                    System.out.println("TTTTT IDK  " + getOpponentForPlayer(player).getId().equals(dto.id));
-                }
                 player.setId(dto.id);
             } else {
                 System.out.println("ERROR SET  ");
