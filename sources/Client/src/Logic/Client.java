@@ -16,6 +16,15 @@ import java.util.ArrayList;
 import static logic.Game.GameState.LOSS;
 import static logic.Game.GameState.WIN;
 
+/**
+ *  Třída Client - obsluhuje vlákno zajišťující
+ *  přijmutí zprávy ze serveru, zajišťuje i odesílání zpráv na server
+ *
+ *
+ *@author     Ada
+ *@version    1.0
+ *@created    prosinec 2019
+ */
 
 public class Client implements ClientListener {
     private Socket socket;

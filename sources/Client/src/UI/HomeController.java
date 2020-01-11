@@ -27,16 +27,38 @@ public Pane contentLoaderPane;
 
     private App app;
 
+    /**
+     *  Třída HomeController - třída obsluhující domovskou
+     *  obrazovku, která zajišťuje zalogování uživatele
+     *
+     *
+     *@author     Ada
+     *@version    1.0
+     *@created    prosinec 2019
+     */
+
     @Override
     public void update() {
     }
 
+    /**
+     * metoda přiřadí aplikaci kontroleru a zaregistuje
+     *
+     * @param app
+     
+     */
     public void inicializuj(App app){
         this.app = app;
         app.register(this);
         update();
     }
 
+    /**
+     * metoda spuštěná po zmáčknutí Přihlásit,
+     * odesílá na server data hráče
+     *
+     * @author Ada
+     */
     public void logIn() throws IOException {
         vstoupit.disableProperty();
         name.disableProperty();

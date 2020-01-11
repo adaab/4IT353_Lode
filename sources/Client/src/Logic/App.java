@@ -21,6 +21,16 @@ import java.util.Set;
 import comm.ServerDto;
 import logic.GameField;
 
+/**
+ *  Třída App - obsluhuje a uchovává aktuální stav hry,
+ *  rozhoduje o spouštění odpovídajících obrazovek,
+ *  logicky zpracovává příchozí zprávy ze serveru
+ *
+ *
+ *@author     Ada
+ *@version    1.0
+ *@created    prosinec 2019
+ */
 public class App implements Subject {
     private Set<Observer> Observers;
     public Client server;
@@ -86,7 +96,7 @@ public class App implements Subject {
      * metoda zpracuje příchozí dto ze serveru, aktualizuje potřebné datové atributy a spustí/aktualizuje potřebnou obrazovku
      *
      * @param dto
-     * @author Ada
+     
      */
     public void processResponse(ServerDto dto) throws IOException {
         if (dto.error != null) {
@@ -151,7 +161,7 @@ public class App implements Subject {
     /**
      * metoda inicializuje Info screen - obrazovku zobrazující se v případě stavů "Waiting for other player", "win" nebo "loss"
      *
-     * @author Ada
+     
      */
     public void getInfoScreen() throws IOException {
         FXMLLoader loader = new FXMLLoader();
@@ -179,7 +189,7 @@ public class App implements Subject {
     /**
      * metoda inicializuje Game screen - obrazovku zobrazující se v případě stavů "Waiting for other player", "win" nebo "loss"
      *
-     * @author Ada
+     
      */
         public void getGameScreen() throws IOException{
             FXMLLoader loader = new FXMLLoader();
@@ -206,7 +216,7 @@ public class App implements Subject {
     /**
      * metoda inicializuje novou hru - vrací na přihlašovací obrazovku
      *
-     * @author Ada
+     
      */
     public void initNewGame() throws IOException {
         FXMLLoader loader = new FXMLLoader();

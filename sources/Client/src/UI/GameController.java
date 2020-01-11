@@ -915,6 +915,16 @@ public class GameController implements Observer {
     private ArrayList<Button> mainFieldButtons;
     private Ship currentShip;
 
+    /**
+     *  Třída GameController - controller obsluhující obrazovku
+     *  na které se odehrává hra (volba lodí a poté samotná hra)
+     *
+     *
+     *@author     Ada
+     *@version    1.0
+     *@created    prosinec 2019
+     */
+
     @Override
     public void update() {
     }
@@ -1205,7 +1215,7 @@ public class GameController implements Observer {
      * metoda obsluhuje odeslání výstřelu hráče při hraní hry
      *
      * @param id
-     * @author Ada
+     
      */
     public void sendShot(String id){
         ClientDto shot = new ClientDto();
