@@ -101,7 +101,6 @@ public class App implements Subject {
     public void processResponse(ServerDto dto) throws IOException {
         if (dto.error != null) {
             this.error = dto.error;
-            System.out.println("TTTT ERRROR  " + error.descr);
             if(error.type.equals(Error.Code.userExists)){
                 controller.handleUserExists();
             } else {
@@ -139,12 +138,6 @@ public class App implements Subject {
                     this.playerField = dto.playerFields;
                     this.opponentPoints = dto.opponentPoints;
                     this.opponentField = dto.opponentField;
-                    for (GameField field : dto.playerFields) {
-                        System.out.println("PLAYER FIELDS: " + field.getX() + " " + field.getY() + " " + field.getFieldState());
-                    }
-                    for (GameField field : dto.playerFields) {
-                        System.out.println("OPPONENT FIELDS: " + field.getX() + " " + field.getY() + " " + field.getFieldState());
-                    }
                     this.isMyTurn = dto.isMyTurn;
                     this.gameController.updateGame();
                     this.gameController.setPlayingScene();

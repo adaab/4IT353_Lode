@@ -1163,7 +1163,6 @@ public class GameController implements Observer {
     public void updateGame() {
         //VIEW FIELD UPDATES
         for (GameField field : app.getPlayerField()) {
-            //System.out.println("PLAYER FIELDS: " + field.getX() + " " + field.getY() + " " + field.getFieldState());
             if (field.getFieldState().equals(GameField.FieldState.ship)) {
                 for (Button btn : viewFieldButtons) {
                     if (btn.getId().substring(1).equals(field.getPosition())) {
@@ -1188,7 +1187,6 @@ public class GameController implements Observer {
 
         //MAIN FIELD UPDATES
         for (GameField field : app.getOpponentField()) {
-            //System.out.println("OPPONENT FIELDS: " + field.getX() + " " + field.getY() + " " + field.getFieldState());
             if (field.getFieldState().equals(GameField.FieldState.missed)) {
                 for (Button btn : mainFieldButtons) {
                     if (btn.getId().equals(field.getPosition())) {
