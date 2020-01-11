@@ -17,6 +17,7 @@ public class Game {
     private Player playerA;
     private Player playerB;
     private Player currentlyPlaying;
+
     private Boolean isGameRunning;
 
     public enum GameState {
@@ -28,6 +29,13 @@ public class Game {
         LOSS
     }
     private GameState currentGameState;
+
+    /**
+     * @return has game ended?
+     */
+    public Boolean getGameRunning() {
+        return isGameRunning;
+    }
 
     /**
      * @return game id (integer)
@@ -106,6 +114,7 @@ public class Game {
     public Game(Integer gameId) {
         this.gameId = gameId;
         this.currentGameState = GameState.INITIALIZED;
+        this.isGameRunning = true;
     }
 
     /**
@@ -214,6 +223,7 @@ public class Game {
         if (fieldWithOpponentShip != null) {
             fieldWithOpponentShip.setFieldState(FieldState.shipHit);
             currentlyPlaying.setPoints(currentlyPlaying.getPoints() + 10);
+
         } else {
             GameField playerField = GameField.getFieldFromArrayByPosition(getOpponentForPlayer(currentlyPlaying).getFields(),dto.shotX, dto.shotY);
             if (playerField != null) {
@@ -221,6 +231,7 @@ public class Game {
             }
         }
         getOpponentForPlayer(currentlyPlaying).updatePlayerFields();
+        checkGameOver();
     }
 
     /**
@@ -242,6 +253,10 @@ public class Game {
             }
         }
         return field;
+    }
+
+    private void checkGameOver() {
+        isGameRunning = getOpponentForPlayer(currentlyPlaying).isAlive();
     }
 
 }

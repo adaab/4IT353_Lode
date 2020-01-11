@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Represents one game field on a board, can be empty, contain ship, death ship or can be missed after previous shot
  *
- *
+ * @author chot02
  */
 public class GameField implements Serializable {
     private String x;

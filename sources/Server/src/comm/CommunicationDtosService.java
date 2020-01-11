@@ -4,9 +4,12 @@ import logic.Game;
 import logic.GameField;
 import logic.Player;
 
+import javax.swing.*;
 import java.io.IOException;
 
 /**
+ * Service that constructs and sends server response to players
+ *
  * @author Tomas.Chour - Aspectworks
  * @date 2019-12-02
  */
@@ -51,11 +54,7 @@ public class CommunicationDtosService {
         ServerDto dto = new ServerDto();
         dto.id = player.getId();
         dto.playerPoints = player.getPoints();
-        if (game.getCurrentGameState() == Game.GameState.NEW && player.readyToPlay() && !game.getOpponentForPlayer(player).readyToPlay()) {
-            dto.gameState = Game.GameState.WAITING_FOR_OTHER_PLAYER;
-        } else {
-            dto.gameState = game.getCurrentGameState();
-        }
+        dto.gameState = determineGameStateForPlayer(game,player);
         dto.playerPoints = player.getPoints();
         dto.playerFields = player.getFields();
         dto.ships = player.getShips();
@@ -71,6 +70,21 @@ public class CommunicationDtosService {
             dto.isMyTurn = game.getCurrentlyPlaying().getId().equals(player.getId());
         }
         return dto;
+    }
+
+    private static Game.GameState determineGameStateForPlayer(Game game, Player player) {
+        if (game.getCurrentGameState() == Game.GameState.NEW && player.readyToPlay() && !game.getOpponentForPlayer(player).readyToPlay()) {
+            return Game.GameState.WAITING_FOR_OTHER_PLAYER;
+        } else {
+            if (!game.getGameRunning() && game.getCurrentGameState() == Game.GameState.PLAYING) {
+                if (player.isAlive()) {
+                    return Game.GameState.WIN;
+                } else {
+                    return Game.GameState.LOSS;
+                }
+            }
+            return game.getCurrentGameState();
+        }
     }
 
 }

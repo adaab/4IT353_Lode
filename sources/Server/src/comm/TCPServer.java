@@ -9,6 +9,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+/**
+ * Main server class - creates games, creates clients (players) and splits them into games
+ *
+ * @author chot02
+ */
 public class TCPServer implements ServerListener{
     private int port;
     private boolean open = true;
