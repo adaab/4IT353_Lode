@@ -84,7 +84,7 @@ public class App implements Subject {
 
     public void processResponse(ServerDto dto) throws IOException {
         if (dto.error != null) {
-            //TODO somehow handle the error
+            System.out.println("TTTT ERRROR  " + dto.error.descr);
         } else {
             switch (dto.gameState) {
                 case INITIALIZED:
@@ -200,4 +200,5 @@ public class App implements Subject {
 
         controller.inicializuj(this);
     }
+
 }
