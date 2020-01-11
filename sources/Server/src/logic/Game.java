@@ -3,7 +3,10 @@ package logic;
 import comm.ClientDto;
 import comm.CommunicationDtosService;
 import comm.Error;
+import comm.TCPServer;
 import logic.GameField.FieldState;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
@@ -13,6 +16,7 @@ import java.util.ArrayList;
  * @author chot2
  */
 public class Game {
+    static final Logger LOG = LoggerFactory.getLogger(Game.class);
     public static final String[] BOARD_LETTERS = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"};
     private Integer gameId;
     private Player playerA;
@@ -180,34 +184,36 @@ public class Game {
      * @author chot2
      */
     public void processClientMessage(Player p, ClientDto dto) {
-        Player messagingPlayer = null;
-        if (p.equals(playerA)) {
-            System.out.println("TTTT EQUALS A");
-            messagingPlayer = playerA;
-        } else if (p.equals(playerB)) {
-            System.out.println("TTTT EQUALS B");
-            messagingPlayer = playerB;
-        }
-        if (messagingPlayer != null) {
-            if (messagingPlayer.getId() == null) {
-                setPlayerId(p, dto);
-            } else {
-                switch (this.currentGameState) {
-                    case NEW:
-                        messagingPlayer.setShips(dto.playerShips);
-                        if (playerA.readyToPlay() && playerB.readyToPlay()) {
-                            this.currentGameState = GameState.PLAYING;
-                        }
-                        break;
-                    case PLAYING:
-                        if (currentlyPlaying.getId().equals(messagingPlayer.getId())) {
-                            handlePlayerShot(dto);
-                            currentlyPlaying = getOpponentForPlayer(currentlyPlaying);
-                        }
+        try {
+            Player messagingPlayer = null;
+            if (p.equals(playerA)) {
+                messagingPlayer = playerA;
+            } else if (p.equals(playerB)) {
+                messagingPlayer = playerB;
+            }
+            if (messagingPlayer != null) {
+                if (messagingPlayer.getId() == null) {
+                    setPlayerId(p, dto);
+                } else {
+                    switch (this.currentGameState) {
+                        case NEW:
+                            messagingPlayer.setShips(dto.playerShips);
+                            if (playerA.readyToPlay() && playerB.readyToPlay()) {
+                                this.currentGameState = GameState.PLAYING;
+                            }
+                            break;
+                        case PLAYING:
+                            if (currentlyPlaying.getId().equals(messagingPlayer.getId())) {
+                                handlePlayerShot(dto);
+                                currentlyPlaying = getOpponentForPlayer(currentlyPlaying);
+                            }
+                    }
                 }
             }
+            informPlayers();
+        } catch (Exception e) {
+            LOG.error("GameId : " + gameId + " Something went wrong: " + e.getMessage());
         }
-        informPlayers();
     }
 
     /**
@@ -260,26 +266,31 @@ public class Game {
      */
     private void checkGameOver() {
         isGameRunning = getOpponentForPlayer(currentlyPlaying).isAlive();
+        if (!isGameRunning) {
+            String endMsg = "Game " + gameId + " ended. Winner was: ";
+            if(playerA.isAlive()) {
+                endMsg += " Player A: " + playerA.getId();
+            } else {
+                endMsg += " Player B: " + playerB.getId();
+            }
+            LOG.info(endMsg);
+        }
     }
 
     /**
-     * sets player id if player with this id doesnt already exists in game, if so, adds error to player
+     * sets player id if player with this id doesn't already exists in game, if so, adds error to player
      *
      * @param player messaging player
      * @param dto data from client
      */
     private void setPlayerId(Player player, ClientDto dto) {
-        System.out.println("TTTTT SETTING ID  ");
         if (player.getId() == null) {
             if (playerB == null || getOpponentForPlayer(player) == null || getOpponentForPlayer(player).getId() == null
                     || !getOpponentForPlayer(player).getId().equals(dto.id)) {
-                System.out.println("TTTTT IDK  " + playerB + "   " + getOpponentForPlayer(player));
-                if (getOpponentForPlayer(player) != null) {
-                    System.out.println("TTTTT IDK  " + getOpponentForPlayer(player).getId().equals(dto.id));
-                }
                 player.setId(dto.id);
+                LOG.error("GameId : " + gameId + "Player id set: " + player.toString());
             } else {
-                System.out.println("ERROR SET  ");
+                LOG.error("GameId : " + gameId + "Player id already exists: " + dto.id);
                 player.error = new Error(Error.Code.userExists, "User with this Id is already registered into the game.");
             }
         }
