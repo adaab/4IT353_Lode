@@ -3,6 +3,7 @@ package UI;
 import Logic.App;
 import Logic.Client;
 import Logic.Observer;
+import javafx.application.HostServices;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.Pane;
 import logic.Game;
@@ -16,8 +17,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 
+import java.awt.*;
+import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -1316,5 +1322,17 @@ public class GameController implements Observer {
 
     public void handleError() {
         instructions.setText("Unexpected error: "+app.error.descr);
+    }
+
+    public void showHelp(){
+        if (Desktop.isDesktopSupported()) {
+            try {
+                URL url = getClass().getResource("/userGuide.pdf");
+                File myFile = new File(url.toURI());
+                Desktop.getDesktop().open(myFile);
+            } catch (IOException | URISyntaxException ex) {
+                // no application registered for PDFs
+            }
+        }
     }
 }

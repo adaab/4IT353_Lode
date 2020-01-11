@@ -7,8 +7,16 @@ import comm.ClientDto;
 import comm.ServerDto;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
+
+import java.awt.*;
+import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 import static logic.Game.GameState.NEW;
 import static logic.Game.GameState.WAITING_FOR_OTHER_PLAYER;
@@ -94,5 +102,17 @@ public Label instructions;
         instructions.setText("Uživatel se zadaným jménem již existuje, prosím zvolte jiné.");
         instructions.setStyle("color: red;");
         instructions.setVisible(true);
+    }
+
+    public void showHelp(){
+        if (Desktop.isDesktopSupported()) {
+            try {
+                URL url = getClass().getResource("/userGuide.pdf");
+                File myFile = new File(url.toURI());
+                Desktop.getDesktop().open(myFile);
+            } catch (IOException | URISyntaxException ex) {
+                // no application registered for PDFs
+            }
+        }
     }
 }

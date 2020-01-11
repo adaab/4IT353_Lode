@@ -8,7 +8,11 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import java.awt.*;
+import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 public class InfoController implements Observer {
 
@@ -85,5 +89,17 @@ public class InfoController implements Observer {
      */
     public void playNewGame() throws IOException {
         app.initNewGame();
+    }
+
+    public void showHelp(){
+        if (Desktop.isDesktopSupported()) {
+            try {
+                URL url = getClass().getResource("/userGuide.pdf");
+                File myFile = new File(url.toURI());
+                Desktop.getDesktop().open(myFile);
+            } catch (IOException | URISyntaxException ex) {
+                // no application registered for PDFs
+            }
+        }
     }
 }
