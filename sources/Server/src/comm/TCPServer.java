@@ -2,6 +2,9 @@ package comm;
 
 import logic.Game;
 import logic.Player;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 import java.io.*;
 import java.net.*;
@@ -15,6 +18,7 @@ import java.util.Random;
  * @author chot02
  */
 public class TCPServer implements ServerListener{
+    static final Logger LOG = LoggerFactory.getLogger(TCPServer.class);
     private int port;
     private boolean open = true;
     private ServerSocket ss;
@@ -29,6 +33,7 @@ public class TCPServer implements ServerListener{
             else this.port=port;
             Thread serverThread = new Thread(new Runnable(){
                 public void run(){
+                    LOG.info("Server start");
                     while(open){
                         try{
                             @SuppressWarnings("resource")final Socket s = ss.accept();
@@ -63,10 +68,10 @@ public class TCPServer implements ServerListener{
                                 }
                             });
                             clientThread.setDaemon(true);
-                            clientThread.setName("Client "+s.getInetAddress().toString());
+                            clientThread.setName("Client "+s.getInetAddress().toString() + " " + s.getPort());
                             clientThread.start();
-                        }catch(SocketException e){  System.out.println("EXCEPT " + e.getMessage());
-                        }catch(IOException e){ e.printStackTrace(); }
+                        }catch(SocketException e){  LOG.error("EXCEPT " + e.getMessage());
+                        }catch(IOException e){ LOG.error("EXCEPT " + e.getMessage()); }
                     }
                 }
             });
@@ -111,25 +116,24 @@ public class TCPServer implements ServerListener{
 
     @Override
     public void clientConnected(Player client, ObjectOutputStream out) {
-        System.out.println("CLIENT " + client + " connected");
+        LOG.info("Client " + client + " connected");
         handlePlayerSplitIntoGames(client);
     }
 
     @Override
     public void clientDisconnected(Player client) {
-        System.out.println("CLIENT " + client + " disconnected");
+        LOG.info("Client " + client + " disconnected");
     }
 
     @Override
     public void recievedInput(Player client, Object msg) {
         ClientDto dto = (ClientDto) msg;
-        System.out.println("DTO " + client + " msg: " + dto.id);
         games.get(dto.gameId).processClientMessage(client, dto);
     }
 
     @Override
     public void serverClosed() {
-        System.out.println("SERVER CLOSED");
+        LOG.info("Server closed");
     }
 
     private void handlePlayerSplitIntoGames(Player client) {
@@ -139,14 +143,13 @@ public class TCPServer implements ServerListener{
             newGame.setPlayerA(client);
             games.put(nextGameId, newGame);
             lastInitiatedGameId = nextGameId;
-            System.out.println("started new game " + lastInitiatedGameId);
+            LOG.info("Started new game " + lastInitiatedGameId);
         } else {
             games.get(lastInitiatedGameId).setPlayerB(client);
-            System.out.println("player b assigned to a game: " + lastInitiatedGameId);
         }
         client.setGameId(lastInitiatedGameId);
+        LOG.info("Player " + client.toString() + " assigned to game: " + lastInitiatedGameId);
         sendInitServerDto(client, lastInitiatedGameId);
-        System.out.println("PLAYER: " + client);
     }
 
     private Integer generateNextGameId() {

@@ -1,3 +1,5 @@
+package logic;
+
 import logic.Game;
 import logic.GameField;
 import org.junit.Assert;
