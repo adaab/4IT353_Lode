@@ -288,9 +288,9 @@ public class Game {
             if (playerB == null || getOpponentForPlayer(player) == null || getOpponentForPlayer(player).getId() == null
                     || !getOpponentForPlayer(player).getId().equals(dto.id)) {
                 player.setId(dto.id);
-                LOG.error("GameId : " + gameId + "Player id set: " + player.toString());
+                LOG.error("GameId : " + gameId + " Player id set: " + player.toString());
             } else {
-                LOG.error("GameId : " + gameId + "Player id already exists: " + dto.id);
+                LOG.error("GameId : " + gameId + " Player id already exists: " + dto.id);
                 player.error = new Error(Error.Code.userExists, "User with this Id is already registered into the game.");
             }
         }
