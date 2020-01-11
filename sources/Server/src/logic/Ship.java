@@ -34,7 +34,14 @@ public class Ship implements Serializable {
      * @return state of ship
      */
     public Boolean getAlive() {
-        return isAlive;
+        Boolean alive = false;
+        for (GameField field : positions) {
+            if (field.getFieldState().equals(GameField.FieldState.ship)) {
+                alive = true;
+                break;
+            }
+        }
+        return alive;
     }
 
     /**
