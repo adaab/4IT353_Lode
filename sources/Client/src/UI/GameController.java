@@ -893,8 +893,8 @@ public class GameController implements Observer {
     public Label score;
 
     private App app;
-    private List<logic.Ship> ships;
-    private Integer shipCount = 0;
+    public List<logic.Ship> ships;
+    public Integer shipCount = 0;
     private HashSet<logic.GameField> positions1;
     public Ship ship1 = new Ship("ship1", 3, true, positions1 = new HashSet<logic.GameField>());
     private HashSet<logic.GameField> positions2;
@@ -909,11 +909,11 @@ public class GameController implements Observer {
     public Ship ship6 = new Ship("ship6", 4, true, positions6 = new HashSet<logic.GameField>());
     private HashSet<logic.GameField> positions7;
     public Ship ship7 = new Ship("ship7", 4, true, positions7 = new HashSet<logic.GameField>());
-    private ArrayList<Button> buttonsWithShips;
+    public ArrayList<Button> buttonsWithShips;
 
-    private ArrayList<Button> viewFieldButtons;
-    private ArrayList<Button> mainFieldButtons;
-    private Ship currentShip;
+    public ArrayList<Button> viewFieldButtons;
+    public ArrayList<Button> mainFieldButtons;
+    public Ship currentShip;
 
     /**
      *  Třída GameController - controller obsluhující obrazovku
@@ -1141,7 +1141,7 @@ public class GameController implements Observer {
     public void setPlayingScene() {
         boatSelect.setVisible(false);
         viewField.setVisible(true);
-        viewField.disabledProperty();
+        viewField.setDisable(true);
         opponentLabel.setVisible(true);
         playerLabel.setText("Tvoje lodě");
         opponentLabel.setText("Lodě protivníka");
@@ -1187,12 +1187,14 @@ public class GameController implements Observer {
                 for (Button btn : mainFieldButtons) {
                     if (btn.getId().equals(field.getPosition())) {
                         btn.setStyle("-fx-background-color: #968d8d");
+                        break;
                     }
                 }
             } else if (field.getFieldState().equals(GameField.FieldState.shipHit)) {
                 for (Button btn : mainFieldButtons) {
                     if (btn.getId().equals(field.getPosition())) {
                         btn.setStyle("-fx-background-color: #216164");
+                        break;
                     }
                 }
             }

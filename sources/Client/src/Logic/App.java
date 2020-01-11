@@ -47,12 +47,12 @@ public class App implements Subject {
     public Integer gameId;
     public Thread main;
     public Boolean isMyTurn;
+    public InfoController infoController;
 
 
-    public App(Stage stage, HomeController controller, Thread main) {
+    public App(Stage stage, HomeController controller) {
         this.stage = stage;
         this.controller = controller;
-        this.main = main;
 
         Observers = new HashSet<>();
         server = new Client("localhost", 8889, this, main);
@@ -100,7 +100,6 @@ public class App implements Subject {
      */
     public void processResponse(ServerDto dto) throws IOException {
         if (dto.error != null) {
-            //TODO somehow handle the error
         } else {
             switch (dto.gameState) {
                 case INITIALIZED:
@@ -184,6 +183,7 @@ public class App implements Subject {
                 controller.youLost();
             }
         }
+        this.infoController = infoController;
     }
 
     /**

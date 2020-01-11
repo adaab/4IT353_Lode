@@ -12,4 +12,6 @@ public class Error {
         //co bude dál potřeba
     };
     public String descr;
+
+
 }
