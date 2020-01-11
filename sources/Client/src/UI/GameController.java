@@ -919,6 +919,12 @@ public class GameController implements Observer {
     public void update() {
     }
 
+    /**
+     * metoda napáruje a zaregistuje Aplikaci k game controlleru
+     *
+     * @author Ada
+     * @param app
+     */
     public void inicializuj(App app) {
         this.app = app;
         app.register(this);
@@ -926,6 +932,11 @@ public class GameController implements Observer {
         System.out.println("INIT");
     }
 
+    /**
+     * metoda připraví obrazovku k spuštění nové hry - k počátečnímu zadání lodí
+     *
+     * @author Ada
+     */
     public void prepareNewGame() {
         viewField.setVisible(false);
         boatSelect.setVisible(true);
@@ -946,6 +957,13 @@ public class GameController implements Observer {
         viewFieldButtons = (ArrayList<Button>) Stream.of(xA0, xA1, xA2, xA3, xA4, xA5, xA6, xA7, xA8, xA9, xA10, xA11, xA12, xB0, xB1, xB2, xB3, xB4, xB5, xB6, xB7, xB8, xB9, xB10, xB11, xB12, xC0, xC1, xC2, xC3, xC4, xC5, xC6, xC7, xC8, xC9, xC10, xC11, xC12, xD0, xD1, xD2, xD3, xD4, xD5, xD6, xD7, xD8, xD9, xD10, xD11, xD12, xE0, xE1, xE2, xE3, xE4, xE5, xE6, xE7, xE8, xE9, xE10, xE11, xE12, xF0, xF1, xF2, xF3, xF4, xF5, xF6, xF7, xF8, xF9, xF10, xF11, xF12, xG0, xG1, xG2, xG3, xG4, xG5, xG6, xG7, xG8, xG9, xG10, xG11, xG12, xH0, xH1, xH2, xH3, xH4, xH5, xH6, xH7, xH8, xH9, xH10, xH11, xH12, xI0, xI1, xI2, xI3, xI4, xI5, xI6, xI7, xI8, xI9, xI10, xI11, xI12, xJ0, xJ1, xJ2, xJ3, xJ4, xJ5, xJ6, xJ7, xJ8, xJ9, xJ10, xJ11, xJ12, xK0, xK1, xK2, xK3, xK4, xK5, xK6, xK7, xK8, xK9, xK10, xK11, xK12, xL0, xL1, xL2, xL3, xL4, xL5, xL6, xL7, xL8, xL9, xL10, xL11, xL12, xM0, xM1, xM2, xM3, xM4, xM5, xM6, xM7, xM8, xM9, xM10, xM11, xM12, xN0, xN1, xN2, xN3, xN4, xN5, xN6, xN7, xN8, xN9, xN10, xN11, xN12, xO0, xO1, xO2, xO3, xO4, xO5, xO6, xO7, xO8, xO9, xO10, xO11, xO12, xP0, xP1, xP2, xP3, xP4, xP5, xP6, xP7, xP8, xP9, xP10, xP11, xP12).collect(Collectors.toList());
     }
 
+    /**
+     * metoda obsluhuje výběr hracího pole - pokud jsme ve fázi zadávání lodí rozhoduje, zda přidáváme nové pole nebo rušíme již staré,
+     * ve fázi hry poté odesílá výstřel na zvolené pole
+     *
+     * @param actionEvent
+     * @author Ada
+     */
     public void handleFieldSelect(javafx.event.ActionEvent actionEvent) {
         score.setVisible(false);
         source = (Button) actionEvent.getSource();
@@ -966,6 +984,13 @@ public class GameController implements Observer {
         }
     }
 
+    /**
+     * metoda obsluhuje výběr hracího pole v případě zadávání lodí - podle aktuálního stavu hracího pole přidává k odpovídající lodi,
+     * popř. nastavuje aktuálně volenou loď
+     *
+     * @author Ada
+     * @param id
+     */
     public void handleFieldSelectNewField(String id){
         if (app.gameState.equals(Game.GameState.NEW)) {
             source.setStyle("-fx-background-color: #216164");
@@ -1031,7 +1056,7 @@ public class GameController implements Observer {
                 currentShip = ship5;
                 ship5.getPositions().add(new logic.GameField(id.substring(0, 1), id.substring(1), GameField.FieldState.ship));
                 if (shipCount == (ship1.getSize() + ship2.getSize() + ship3.getSize() + ship4.getSize() + ship5.getSize())) {
-                    if (validateShip(ship4)) {
+                    if (validateShip(ship5)) {
                         ships.add(ship5);
                         boat5.setImage(new Image("/icons/tetris_done.png"));
                         boat6.setOpacity(1);
@@ -1073,6 +1098,13 @@ public class GameController implements Observer {
         }
     }
 
+    /**
+     * metoda volaná poté, co jsou všechny lodě úspěšně zvoleny - tvoří nové dto s daty o lodích,
+     * odesílá na server a disabluje hrací pole
+     *
+     * @author Ada
+     */
+
     public void shipsFinished() {
         contentLoaderPane.setVisible(true);
         contentLoader.setVisible(true);
@@ -1091,6 +1123,11 @@ public class GameController implements Observer {
         buttonsWithShips.forEach((btn) -> btn.setStyle("-fx-background-color: white"));
     }
 
+    /**
+     * metoda upravuje obrazovku na formulář pro probíhající hru
+     *
+     * @author Ada
+     */
     public void setPlayingScene() {
         boatSelect.setVisible(false);
         viewField.setVisible(true);
@@ -1101,6 +1138,12 @@ public class GameController implements Observer {
         score.setVisible(true);
     }
 
+    /**
+     * metoda spouštěná pokaždé po příchodu aktualizace hry ze serveru - nastavuje pole
+     * dle aktuálního stavu, aktualizuje body apod.
+     *
+     * @author Ada
+     */
     public void updateGame() {
         //VIEW FIELD UPDATES
         for (GameField field : app.getPlayerField()) {
@@ -1158,6 +1201,12 @@ public class GameController implements Observer {
         contentLoaderPane.setVisible(false);
     }
 
+    /**
+     * metoda obsluhuje odeslání výstřelu hráče při hraní hry
+     *
+     * @param id
+     * @author Ada
+     */
     public void sendShot(String id){
         ClientDto shot = new ClientDto();
         shot.gameId = app.gameId;
@@ -1172,6 +1221,17 @@ public class GameController implements Observer {
         contentLoaderPane.setVisible(true);
     }
 
+    /**
+     * metoda validuje tvar zadané lodi - zda odpovídá té lodi,
+     * kterou měl právě uživatel zvolit
+     *
+     * metoda používá pro kontrolu matematický součin souřadnic jednotlivých polí a porovnává ho
+     * s součinem souřadnic vzoru
+     *
+     * @author Ada
+     * @param ship
+     * @return boolean - je loď korektní a může být uložena?
+     */
     public boolean validateShip(Ship ship) {
         Boolean isOkX = false;
         Boolean isOkY = false;
@@ -1219,7 +1279,7 @@ public class GameController implements Observer {
                 Arrays.sort(y);
 
                 isOkX = (x[0]*x[1]*x[2]*x[3]*x[4] == x[0]*(x[0]+1)*(x[0]+2)*(x[0]+3)*(x[0]+4)) && (y[0]*y[1]*y[2]*y[3]*y[4] == Math.round(Math.pow(y[0],5)));
-                isOkY = (y[0]*y[1]*y[2]*y[3]*y[4] == y[0]*(y[0]+1)*(y[0]+2)*(y[0]+3)*(y[0]+4)) && (x[0]*x[1]*x[2]*x[3]*x[4] == Math.round(Math.pow(x[0], 5)));
+                isOkY = (y[0]*y[1]*y[2]*y[3]*y[4] == y[0]*(y[0]+1)*(y[0]+2)*(y[0]+3)*(y[0]+4)) && (x[0]*x[1]*x[2]*x[3]*x[4] == Math.round(Math.pow(x[0],5)));
             } else {
                 Integer[] x = {x1Pos, x2Pos, x3Pos, x4Pos};
                 Integer[] y = {y1, y2, y3, y4};
@@ -1227,14 +1287,14 @@ public class GameController implements Observer {
                 Arrays.sort(y);
 
                 if(ship.getName().equals("ship4") || ship.getName().equals("ship5")){
-                    isOkX = (x[0]*x[1]*x[2]*x[3]==x[0]*(x[0]+1)*(x[0]+2)*(x[0]+1)) && ((y[0]*y[1]*y[2]*y[3] == Math.round(Math.pow(y[0],3)*(y[0]+1))) || (y[0]*y[1]*y[2]*y[3] == Math.round(Math.pow(y[0],3)*(y[0]-1))));
-                    isOkY = (y[0]*y[1]*y[2]*y[3]==y[0]*(y[0]+1)*(y[0]+2)*(y[0]+1)) && ((x[0]*x[1]*x[2]*x[3] == Math.round(Math.pow(x[0],3)*(x[0]+1))) || (x[0]*x[1]*x[2]*x[3] == Math.round(Math.pow(x[0],3)*(x[0]-1))));
+                    isOkX = (x[0]*x[1]*x[2]*x[3]==x[0]*(x[0]+1)*(x[0]+2)*(x[0]+1)) && ((y[0]*y[1]*y[2]*y[3] == Math.round(Math.pow(y[0]+1,3)*(y[0]))) || (y[0]*y[1]*y[2]*y[3] == Math.round(Math.pow(y[0],3)*(y[0]+1))));
+                    isOkY = (y[0]*y[1]*y[2]*y[3]==y[0]*(y[0]+1)*(y[0]+2)*(y[0]+1)) && ((x[0]*x[1]*x[2]*x[3] == Math.round(Math.pow(x[0]+1,3)*(x[0]))) || (x[0]*x[1]*x[2]*x[3] == Math.round(Math.pow(x[0],3)*(x[0]+1))));
                 } else if(ship.getName().equals("ship6")){
                     isOkX = ((x[0]*x[1]*x[2]*x[3]==x[0]*(x[0]+1)*(x[0]+2)*(x[0]) || (x[0]*x[1]*x[2]*x[3]==x[0]*(x[0]+1)*(x[0]+2)*(x[0]+2)) && ((y[0]*y[1]*y[2]*y[3] == Math.round(Math.pow(y[0],3)*(y[0]+1))) || (y[0]*y[1]*y[2]*y[3] == Math.round(Math.pow(y[0],3)*(y[0]-1))))));
                     isOkY = ((y[0]*y[1]*y[2]*y[3]==y[0]*(y[0]+1)*(y[0]+2)*(y[0]) || (y[0]*y[1]*y[2]*y[3]==y[0]*(y[0]+1)*(y[0]+2)*(y[0]+2)) && ((x[0]*x[1]*x[2]*x[3] == Math.round(Math.pow(x[0],3)*(x[0]+1))) || (x[0]*x[1]*x[2]*x[3] == Math.round(Math.pow(x[0],3)*(x[0]-1))))));
                 } else if(ship.getName().equals("ship7")){
-                    isOkX = (x[0]*x[1]*x[2]*x[3]==x[0]*(x[0]+1)*(x[0]+2)*(x[0]+1)) && ((y[0]*y[1]*y[2]*y[3] == Math.round(Math.pow(y[0],2)*(Math.round(Math.pow((y[0]+1),2)))) || (y[0]*y[1]*y[2]*y[3] == Math.round(Math.pow(y[0],3)*(Math.round(Math.pow((y[0]-1),2)))))));
-                    isOkY = (y[0]*y[1]*y[2]*y[3]==y[0]*(y[0]+1)*(y[0]+2)*(y[0]+1)) && ((x[0]*x[1]*x[2]*x[3] == Math.round(Math.pow(x[0],3)*(Math.round(Math.pow((x[0]+1),2)))) || (x[0]*x[1]*x[2]*x[3] == Math.round(Math.pow(x[0],3)*(Math.round(Math.pow((x[0]-1),2)))))));
+                    isOkX = (x[0]*x[1]*x[2]*x[3]==x[0]*(x[0]+1)*(x[0]+2)*(x[0]+1)) && ((y[0]*y[1]*y[2]*y[3] == Math.round(Math.pow(y[0],2)*(Math.round(Math.pow((y[0]+1),2)))) || (y[0]*y[1]*y[2]*y[3] == Math.round(Math.pow(y[0],2)*(Math.round(Math.pow((y[0]-1),2)))))));
+                    isOkY = (y[0]*y[1]*y[2]*y[3]==y[0]*(y[0]+1)*(y[0]+2)*(y[0]+1)) && ((x[0]*x[1]*x[2]*x[3] == Math.round(Math.pow(x[0],2)*(Math.round(Math.pow((x[0]+1),2)))) || (x[0]*x[1]*x[2]*x[3] == Math.round(Math.pow(x[0],2)*(Math.round(Math.pow((x[0]-1),2)))))));
                 }
             }
         }

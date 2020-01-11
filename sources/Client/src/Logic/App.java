@@ -45,7 +45,7 @@ public class App implements Subject {
         this.main = main;
 
         Observers = new HashSet<>();
-        server = new Client("localhost", 8888, this, main);
+        server = new Client("localhost", 8889, this, main);
     }
 
     @Override
@@ -82,6 +82,12 @@ public class App implements Subject {
         return server;
     }
 
+    /**
+     * metoda zpracuje příchozí dto ze serveru, aktualizuje potřebné datové atributy a spustí/aktualizuje potřebnou obrazovku
+     *
+     * @param dto
+     * @author Ada
+     */
     public void processResponse(ServerDto dto) throws IOException {
         if (dto.error != null) {
             //TODO somehow handle the error
@@ -142,6 +148,11 @@ public class App implements Subject {
         }
     }
 
+    /**
+     * metoda inicializuje Info screen - obrazovku zobrazující se v případě stavů "Waiting for other player", "win" nebo "loss"
+     *
+     * @author Ada
+     */
     public void getInfoScreen() throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/info.fxml"));
@@ -165,6 +176,11 @@ public class App implements Subject {
         }
     }
 
+    /**
+     * metoda inicializuje Game screen - obrazovku zobrazující se v případě stavů "Waiting for other player", "win" nebo "loss"
+     *
+     * @author Ada
+     */
         public void getGameScreen() throws IOException{
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/game.fxml"));
@@ -187,6 +203,11 @@ public class App implements Subject {
         return opponentField;
     }
 
+    /**
+     * metoda inicializuje novou hru - vrací na přihlašovací obrazovku
+     *
+     * @author Ada
+     */
     public void initNewGame() throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/home.fxml"));

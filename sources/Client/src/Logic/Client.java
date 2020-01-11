@@ -100,6 +100,13 @@ public class Client implements ClientListener {
             out=null;
         }catch(Exception exception){ exception.printStackTrace();}
     }*/
+
+    /**
+     * metoda odesílá klientskou zprávu na server
+     *
+     * @param msg
+     * @author Ada
+     */
     public void send(ClientDto msg) throws IOException {
         //TODO this is just for testing purposes
         /*if(app.gameState.equals(Game.GameState.NEW)){
@@ -171,6 +178,12 @@ public class Client implements ClientListener {
 
     }
 
+    /**
+     * metoda přijme a zaloguje nově příchozí zprávu ze serveru, spustí nové vlákno, které provede zpracování odpovědi
+     *
+     * @author Ada
+     * @param msg
+     */
     @Override
     public void recivedInput(Object msg) throws IOException {
         ServerDto dto = (ServerDto) msg;
