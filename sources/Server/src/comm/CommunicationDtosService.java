@@ -10,11 +10,17 @@ import java.io.IOException;
 /**
  * Service that constructs and sends server response to players
  *
- * @author Tomas.Chour - Aspectworks
- * @date 2019-12-02
+ * @author chot02 - Aspectworks
  */
 public class CommunicationDtosService {
 
+    /**
+     * Sends ServerDto to both players (if possible)
+     *
+     * @author chot02
+     *
+     * @param game game from which we want to fill dto
+     */
     public static void informPlayers(Game game) {
         if (game.getPlayerA() != null) {
             try {
@@ -44,6 +50,14 @@ public class CommunicationDtosService {
         }
     }
 
+    /**
+     * creates and fills Server dto with values from game and player
+     *
+     * @author chot02
+     *
+     * @param game game from which we want to fill dto
+     * @param player player for which dto should be filled
+     */
     public static ServerDto fillServerResponseForPlayer(Game game, Player player) {
         ServerDto dto = new ServerDto();
         dto.id = player.getId();
@@ -66,6 +80,14 @@ public class CommunicationDtosService {
         return dto;
     }
 
+    /**
+     * determines which GameState should be send to player
+     *
+     * @author chot02
+     *
+     * @param game game from which we want to fill dto
+     * @param player player for which dto should be filled
+     */
     private static Game.GameState determineGameStateForPlayer(Game game, Player player) {
         if (game.getCurrentGameState() == Game.GameState.NEW
                 && ((player.readyToPlay() && !game.getOpponentForPlayer(player).readyToPlay())
